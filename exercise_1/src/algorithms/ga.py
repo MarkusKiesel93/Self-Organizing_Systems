@@ -74,6 +74,7 @@ class GeneticAltorithm():
             return []
 
     # select a chromosome based on the fitness (probabilitie)
+    # todo: can be changed to random.choice with weights parameter
     def _roulette(self, fitness_probabilities) -> int:
         partial_sum = 0.0
         roulette_throw = random.random()

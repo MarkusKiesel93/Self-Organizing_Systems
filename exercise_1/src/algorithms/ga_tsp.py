@@ -46,27 +46,19 @@ class GeneticAltorithmTSP(GeneticAltorithm):
             return chromosome
 
     def _crossover(self, mother: np.array, father: np.array) -> np.array:
-        child = np.full(self.dimension, -1, np.int32)
+        # create child from cossover of father and mother
         cutoff_from = random.randint(0, int(self.dimension / 2) - 1)
         cutoff_to = random.randint(int(self.dimension / 2), self.dimension - 1)
-        mother_genes_index = np.arange(cutoff_from, cutoff_to + 1)
-        child[mother_genes_index] = mother[mother_genes_index]
-        # todo: improve cluttered code (should work more efficently with numpy operations)
-        for i in range(len(child)):
-            if child[i] < 0:
-                if father[i] not in child:
-                    child[i] = father[i]
-        genes_not_used_from_fahter = []
-        for gene in father:
-            if gene not in mother[mother_genes_index] and gene not in child:
-                genes_not_used_from_fahter.append(gene)
-        for i in range(len(child)):
-            if child[i] < 0:
-                if len(genes_not_used_from_fahter) > 0:
-                    child[i] = genes_not_used_from_fahter.pop(0)
+        father_gene_indices = np.array([val < cutoff_from or val > cutoff_to for val in range(self.dimension)])
+        mother_gene_indices = ~father_gene_indices  # inverse indices of fahter
+        child = np.copy(mother)
+        child[father_gene_indices] = father[father_gene_indices]
+        # correct child genes to get valid solution
         genes_not_used = list(set(self.nodes).difference(set(child)))
-        for gene in set(self.nodes).difference(set(child)):
-            if child[i] < 0:
-                child[i] = genes_not_used.pop(0)
-        assert (child >= 0).all()
+        if len(genes_not_used) > 0:
+            # correct only fahter part of solution
+            for i in self.nodes[father_gene_indices]:
+                if child[i] in child[mother_gene_indices]:
+                    child[i] = genes_not_used.pop(0)
+        assert set(child) == set(self.nodes)  # check if valid solution
         return child

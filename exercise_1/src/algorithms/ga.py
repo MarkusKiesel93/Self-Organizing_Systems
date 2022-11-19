@@ -65,10 +65,13 @@ class GeneticAltorithm():
     # get the best performing chromosomes based on the fitness
     def _select_elites(self, fitness: List[float]) -> List[List[int]]:
         nuber_of_elites = int(self.population_size * self.elitism_rate)
-        elite_index = np.argsort(fitness)[:nuber_of_elites]
-        elites = [self.population[i] for i in elite_index]
-        assert nuber_of_elites == len(elites)
-        return elites
+        if nuber_of_elites > 0:
+            elite_index = np.argsort(fitness)[:nuber_of_elites]
+            elites = [self.population[i] for i in elite_index]
+            assert nuber_of_elites == len(elites)
+            return elites
+        else:
+            return []
 
     # select a chromosome based on the fitness (probabilitie)
     def _roulette(self, fitness_probabilities) -> int:

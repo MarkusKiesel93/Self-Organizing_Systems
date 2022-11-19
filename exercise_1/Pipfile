@@ -10,6 +10,7 @@ jupyter = "==1.0.0"
 geneticalgorithm = "==1.0.2"
 seaborn = "==0.12.1"
 tqdm = "==4.64.1"
+matplotlib = "==3.6.2"
 
 [dev-packages]
 

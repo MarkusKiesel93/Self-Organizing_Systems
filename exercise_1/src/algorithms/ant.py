@@ -1,18 +1,33 @@
-import random
+from typing import List
+import numpy as np
 
 
 class Ant():
-    def __init__(self, nodes) -> None:
+    def __init__(self, weights, nodes) -> None:
+        self.weights: np.ndarray = weights
         self.nodes = nodes
-        self.fitness = []
-        self.nodes_not_visited = self.nodes[1:]  # all nodes except start node
-        self.current_node = 0
+        self.Q = 1  # todo: what is this constant ??
 
-    def move(self, probabilities) -> None:
-        selected_node = random.choice(self.nodes, weights=probabilities[self.current_node])
-        self.nodes_not_visited.remove(selected_node)
-        self.nodes_visited.append(selected_node)
-        self.current_node = selected_node
+        self.start_node = nodes[0]  # todo: from which point does an ant start ? 0 ? random ?
+        self.current_node = self.start_node
+        self.fitness: float = 0.0
+        self.path: List = [self.current_node]
+        self.nodes_not_visited: np.array = self.nodes[self.nodes != self.current_node]  # all nodes except start node
+        self.pheromones_segregated: np.ndarray = np.zeros(self.weights.shape)
+        self.probabilities: np.ndarray = None
 
-    def has_finished(self):
-        return len(self.nodes_not_visited) == 0
+    # reset ant values for new iteration and set probabilities for run
+    def prepare(self, probabilities):
+        self.fitness = 0.0
+        self.path = [self.current_node]
+        self.nodes_not_visited = self.nodes[self.nodes != self.current_node]
+        self.pheromones_segregated = np.zeros(self.weights.shape)
+        self.probabilities = probabilities
+
+    # move ant from one node to another based on the transition probabilities
+    def move(self) -> None:
+        raise NotImplementedError('implment how ant moves')
+
+    # determine when ant is finished
+    def has_finished(self) -> bool:
+        raise NotImplementedError('implment when ant finished')

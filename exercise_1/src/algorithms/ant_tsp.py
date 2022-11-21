@@ -1,56 +1,31 @@
-from typing import List
 import numpy as np
-from tqdm import tqdm
 
 from .ant import Ant
 
 
-class AntSystemTSP():
-    def __init__(self, problem_instance: np.ndarray, **kwargs) -> None:
-        self.problem_instance: np.ndarray = problem_instance
-        self.dimension: int = self.problem_instance.shape[0]
-        self.nodes: np.array = np.arange(self.dimension)
-        self.visibility = np.power(problem_instance, -1)  # defines the visibilit 1 / n_ij
+class AntTSP(Ant):
+    def __init__(self, weights, nodes) -> None:
+        super().__init__(weights, nodes)
 
-        self.alpha = kwargs.get('alpha', 1)
-        self.beta = kwargs.get('beta', 1)
-        self.time = kwargs.get('time', 100)
-        self.number_of_ants = ('number_of_ants', 20)
+    # move ant from one node to another based on the transition probabilities
+    def move(self) -> None:
+        # use probabilitys at current node -> only consider not visited nodes
+        probabilities_at_current_node = self.probabilities[self.current_node]
+        proabilities_not_visited = probabilities_at_current_node[self.nodes_not_visited]
+        proabilities_not_visited /= sum(proabilities_not_visited)  # rescale to norm 1
+        selected_node = np.random.choice(self.nodes_not_visited, p=proabilities_not_visited)
+        # update values
+        self.path.append(selected_node)
+        self.fitness += self.weights[self.current_node][selected_node]
+        self.pheromones_segregated[self.current_node][selected_node] = self.Q
+        self.nodes_not_visited = self.nodes_not_visited[self.nodes_not_visited != selected_node]
+        self.current_node = selected_node
+        # move back to start if finished
+        if self.has_finished():
+            self.fitness += self.weights[self.current_node][self.start_node]
+            self.pheromones_segregated /= self.fitness  # self.weights[self.current_node][selected_node]
+            self.current_node = self.start_node
 
-        self.trail_intensity: np.ndarray = np.full(self.problem_instance.shape, 0.001)  # tau
-        self.evaporation_coefficient: int = None  # p
-        self.best_fitness_at_time_point: List[float] = []
-
-        self.debug_mode = kwargs.get('debug_mode', False)
-
-    def run(self) -> None:
-        start_target_node = 0
-        ants = [Ant(self.nodes) for _ in range(self.number_of_ants)]
-        # iterate time points
-        for t in tqdm(np.arange(self.time), desc='Time Point: '):
-            # find soultion for all ants
-            fitness_all_ants = []
-            for ant in ants:
-                transition_probabilities = self._caluclate_transition_probabilities(ant)
-                while not ant.has_finished():
-                    ant.move(transition_probabilities)
-                fitness_all_ants.append(self._evaluate_fitness(ant.nodes_visited))
-            top_solution = np.argsort(fitness_all_ants)[0]
-            self.best_fitness_at_time_point.append(fitness_all_ants[top_solution])
-            self._update_pheromones()
-
-    def _caluclate_transition_probabilities(self, ant: Ant):
-        probabilities = np.zeros(self.problem_instance.shapes)
-        for node_from in ant.nodes_not_visited:
-            for node_to in self.nodes:
-                probabilities[node_from][node_to] = (
-                    np.power(self.trail_intensity[node_from][node_to], self.alpha) *
-                    np.power(self.visibility[node_from][node_to], self.beta)
-                )
-        probabilities = probabilities.apply(lambda row: row / row.sum, axis=0)
-        return probabilities
-
-    def _update_pheromones(self):
-        # apply update rule to update trail_intensity matrix after iteration
-        pass
-
+    # determine when ant is finished
+    def has_finished(self) -> bool:
+        return len(self.nodes_not_visited) == 0

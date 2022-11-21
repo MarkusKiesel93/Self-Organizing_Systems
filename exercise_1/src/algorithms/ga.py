@@ -1,5 +1,4 @@
 from typing import List, Tuple
-import random
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -18,8 +17,8 @@ class GeneticAltorithm():
 
         self.debug_mode = kwargs.get('debug_mode', False)
 
-        self.population = []
-        self.best_fitness_in_generation = []
+        self.population: List[np.array] = []
+        self.best_fitness_in_generation: List[float] = []
 
     # genetic algorithm procedure
     def run(self):
@@ -36,13 +35,12 @@ class GeneticAltorithm():
             next_population.extend(self._select_elites(current_fitness))
             # generate next generation by crossover and mutation
             while len(next_population) < self.population_size:
-                father = self.population[self._roulette(current_probabilities)]
-                mother = self.population[self._roulette(current_probabilities)]
+                father = self._roulette(current_probabilities)
+                mother = self._roulette(current_probabilities)
                 child = self._crossover(father, mother)
                 child = self._mutate(child)
                 next_population.append(child)
             if self.debug_mode:
-
                 print(f'Generation: {generation + 1}')
                 print(f'Top fitness: {current_fitness[top_solution]}')
                 print(f'Solution: {self.population[top_solution]}')
@@ -74,14 +72,9 @@ class GeneticAltorithm():
             return []
 
     # select a chromosome based on the fitness (probabilitie)
-    # todo: can be changed to random.choice with weights parameter
-    def _roulette(self, fitness_probabilities) -> int:
-        partial_sum = 0.0
-        roulette_throw = random.random()
-        for i, probability in enumerate(fitness_probabilities):
-            partial_sum += probability
-            if partial_sum >= roulette_throw:
-                return i
+    def _roulette(self, fitness_probabilities) -> np.array:
+        index_selected = np.random.choice(np.arange(self.population_size), p=fitness_probabilities)
+        return self.population[index_selected]
 
     def _evaluate_fitness(self, chromosome: np.array) -> float:
         raise NotImplementedError('implment fitness function in concrete problem implementation')

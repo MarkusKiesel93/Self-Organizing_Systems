@@ -12,12 +12,12 @@ class AntTSP(Ant):
         # use probabilitys at current node -> only consider not visited nodes
         probabilities_at_current_node = self.probabilities[self.current_node]
         proabilities_not_visited = probabilities_at_current_node[self.nodes_not_visited]
-        proabilities_not_visited /= sum(proabilities_not_visited)  # rescale to norm 1
+        proabilities_not_visited /= proabilities_not_visited.sum()  # rescale to norm 1
         selected_node = np.random.choice(self.nodes_not_visited, p=proabilities_not_visited)
         # update values
         self.path.append(selected_node)
         self.fitness += self.weights[self.current_node][selected_node]
-        self.pheromones_segregated[self.current_node][selected_node] = self.Q
+        self.pheromones_segregated[self.current_node][selected_node] = self.pheromone_intensity
         self.nodes_not_visited = self.nodes_not_visited[self.nodes_not_visited != selected_node]
         self.current_node = selected_node
         # move back to start if finished

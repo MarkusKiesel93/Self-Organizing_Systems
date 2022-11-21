@@ -6,9 +6,9 @@ class Ant():
     def __init__(self, weights, nodes) -> None:
         self.weights: np.ndarray = weights
         self.nodes = nodes
-        self.Q = 1  # todo: what is this constant ??
+        self.pheromone_intensity = 1  # todo: what is this constant ??
 
-        self.start_node = nodes[0]  # todo: from which point does an ant start ? 0 ? random ?
+        self.start_node = np.random.choice(self.nodes)
         self.current_node = self.start_node
         self.fitness: float = 0.0
         self.path: List = [self.current_node]

@@ -54,6 +54,7 @@ class GeneticAltorithmTSP(GeneticAltorithm):
         child = np.copy(mother)
         child[father_gene_indices] = father[father_gene_indices]
         # correct child genes to get valid solution
+        # todo: select reandomly unused gene
         genes_not_used = list(set(self.nodes).difference(set(child)))
         if len(genes_not_used) > 0:
             # correct only fahter part of solution

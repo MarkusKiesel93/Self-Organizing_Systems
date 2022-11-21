@@ -77,6 +77,6 @@ class AntSystem():
         for ant in ants:
             pheromone_updates_all_ants += ant.pheromones_segregated
         # evaporate pheromones
-        self.trail_intensity *= self.evaporation_coefficient
+        self.trail_intensity *= (1 - self.evaporation_coefficient)
         # add newly segregated pheromones
         self.trail_intensity += pheromone_updates_all_ants

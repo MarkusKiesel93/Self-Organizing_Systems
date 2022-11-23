@@ -39,9 +39,8 @@ class GeneticAltorithmTSP(GeneticAltorithm):
                 indx_from = random.choice(self.nodes)
                 index_to = random.choice(self.nodes)
                 if indx_from != index_to:
-                    tmp_gene = mutated_chromosome[indx_from]
                     mutated_chromosome[indx_from] = chromosome[index_to]
-                    mutated_chromosome[index_to] = tmp_gene
+                    mutated_chromosome[index_to] = chromosome[indx_from]
                     return mutated_chromosome
         else:
             return chromosome

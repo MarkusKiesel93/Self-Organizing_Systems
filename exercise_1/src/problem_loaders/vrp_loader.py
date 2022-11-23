@@ -22,14 +22,14 @@ class VRPLoader():
         if not os.path.exists(f"{path}.vrp"):
             raise ValueError(f"Invalid choice {self.problem_name}. Should be one of {[os.path.basename(x).split('.')[0] for x in glob.glob(f'{self.DATA_PATH}/*.vrp')]}")
 
-        coordinates, demand = self._load_values_by_line(f"{path}.vrp")
+        coordinates, demand, capacity = self._load_values_by_line(f"{path}.vrp")
         best_solution = self._load_solution(f"{path}.sol")
         
         distance = sp.distance.cdist(coordinates, coordinates, 'euclidean')
             
         assert distance.diagonal().sum() == 0.0  # weights to same node have to be 0
         assert distance.shape[0] == distance.shape[1]  # symmetric matrix
-        return distance, demand, best_solution
+        return distance, demand, capacity, best_solution
        
 
     def _load_solution(self, path):
@@ -46,6 +46,7 @@ class VRPLoader():
     def _load_values_by_line(self, path) -> Tuple[np.array, np.array]:
         coordinates = []
         demand = []
+        capacity = 0
         mode = None
         with open(path, 'r') as file:
             for line in file.readlines():
@@ -53,6 +54,9 @@ class VRPLoader():
 
                 # skip comment section
                 if mode is None:
+                    if line.startswith("CAPACITY"):
+                       capacity = int(line.split(":")[1].strip())
+                       continue
                     if line == "NODE_COORD_SECTION":
                         mode = "COORD"
                         continue
@@ -75,4 +79,4 @@ class VRPLoader():
                         dem = line.split()
                         demand.append(int(dem[1]))
 
-        return np.array(coordinates), np.array(demand) 
+        return np.array(coordinates), np.array(demand), capacity

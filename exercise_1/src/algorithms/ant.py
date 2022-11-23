@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Ant():
-    def __init__(self, weights, nodes) -> None:
+    def __init__(self, weights, nodes, **kwargs) -> None:
         self.weights: np.ndarray = weights
         self.nodes = nodes
         self.pheromone_intensity = 1  # todo: what is this constant ??

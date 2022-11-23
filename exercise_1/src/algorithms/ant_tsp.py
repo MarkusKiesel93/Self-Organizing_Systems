@@ -4,8 +4,8 @@ from .ant import Ant
 
 
 class AntTSP(Ant):
-    def __init__(self, weights, nodes) -> None:
-        super().__init__(weights, nodes)
+    def __init__(self, weights, nodes, **kwargs) -> None:
+        super().__init__(weights, nodes, **kwargs)
 
     # move ant from one node to another based on the transition probabilities
     def move(self) -> None:

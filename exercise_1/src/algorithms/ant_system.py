@@ -25,7 +25,7 @@ class AntSystem():
         self.best_fitness_at_time_point: List[float] = []
 
     def run(self) -> None:
-        ants = [self.ant_class(self.problem_instance, self.nodes) for _ in range(self.number_of_ants)]
+        ants = [self.ant_class(self.problem_instance, self.nodes, count=i) for i in range(self.number_of_ants)]
         # iterate time points
         for t in tqdm(np.arange(self.time), desc='Time Point: '):
             # recalculate transition probabilities because of pheromone updates

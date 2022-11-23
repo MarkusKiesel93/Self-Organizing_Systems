@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Any
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -17,9 +17,9 @@ class GeneticAltorithm():
 
         self.debug_mode = kwargs.get('debug_mode', False)
 
-        self.population: List[np.array] = []
+        self.population: List[Any] = []
         self.best_fitness_in_generation: List[float] = []
-
+        self.best_chromosome = None
     # genetic algorithm procedure
     def run(self):
         # create initial population
@@ -31,8 +31,11 @@ class GeneticAltorithm():
             current_fitness, current_probabilities = self._calulate_population_fitness()
             top_solution = np.argsort(current_fitness)[0]
             self.best_fitness_in_generation.append(current_fitness[top_solution])
+            self.best_chromosome = self.population[top_solution]
+
             # select elitists
             next_population.extend(self._select_elites(current_fitness))
+            
             # generate next generation by crossover and mutation
             while len(next_population) < self.population_size:
                 father = self._roulette(current_probabilities)
@@ -79,7 +82,7 @@ class GeneticAltorithm():
     def _evaluate_fitness(self, chromosome: np.array) -> float:
         raise NotImplementedError('implment fitness function in concrete problem implementation')
 
-    def _generate_initial_population(self) -> List[np.array]:
+    def _generate_initial_population(self) -> List[Any]:
         raise NotImplementedError('implment population generation in concrete problem implementation')
 
     def _mutate(self, chromosome: np.array) -> np.array:

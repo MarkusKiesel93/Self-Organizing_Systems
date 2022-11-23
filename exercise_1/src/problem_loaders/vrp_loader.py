@@ -23,13 +23,13 @@ class VRPLoader():
             raise ValueError(f"Invalid choice {self.problem_name}. Should be one of {[os.path.basename(x).split('.')[0] for x in glob.glob(f'{self.DATA_PATH}/*.vrp')]}")
 
         coordinates, demand, capacity = self._load_values_by_line(f"{path}.vrp")
-        best_solution = self._load_solution(f"{path}.sol")
+        best_solution, cost = self._load_solution(f"{path}.sol")
         
         distance = sp.distance.cdist(coordinates, coordinates, 'euclidean')
             
         assert distance.diagonal().sum() == 0.0  # weights to same node have to be 0
         assert distance.shape[0] == distance.shape[1]  # symmetric matrix
-        return distance, demand, capacity, best_solution
+        return coordinates, distance, demand, capacity, best_solution, cost
        
 
     def _load_solution(self, path):

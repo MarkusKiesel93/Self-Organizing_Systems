@@ -23,13 +23,13 @@ class AntSystem():
 
         self.trail_intensity: np.ndarray = np.full(self.problem_instance.shape, 0.001)  # tau
         self.best_fitness_at_time_point: List[float] = []
-        
+        self.best_path: List[int] = []
         # vrp constraints
         self.demand = kwargs.get('demand', None)
         self.capacity = kwargs.get('capacity', None)
 
     def run(self) -> None:
-        ants = [self.ant_class(self.problem_instance, self.nodes, count=i, demand=self.demand) for i in range(self.number_of_ants)]
+        ants = [self.ant_class(self.problem_instance, self.nodes, count=i, demand=self.demand, capacity=self.capacity) for i in range(self.number_of_ants)]
         # iterate time points
         for t in tqdm(np.arange(self.time), desc='Time Point: '):
             # recalculate transition probabilities because of pheromone updates
@@ -44,6 +44,7 @@ class AntSystem():
             # evaluate ants
             top_ant = np.argsort(fitness_all_ants)[0]
             self.best_fitness_at_time_point.append(fitness_all_ants[top_ant])
+            self.best_path = ants[top_ant].path
             # print info
             if self.debug_mode:
                 print(f'Time Point: {t + 1}')

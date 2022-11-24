@@ -19,7 +19,7 @@ class GeneticAltorithm():
 
         self.population: List[Any] = []
         self.best_fitness_in_generation: List[float] = []
-        self.best_chromosome = None
+        self.best_solution = None
     # genetic algorithm procedure
     def run(self):
         # create initial population
@@ -31,7 +31,7 @@ class GeneticAltorithm():
             current_fitness, current_probabilities = self._calulate_population_fitness()
             top_solution = np.argsort(current_fitness)[0]
             self.best_fitness_in_generation.append(current_fitness[top_solution])
-            self.best_chromosome = self.population[top_solution]
+            self.best_solution = self.population[top_solution]
 
             # select elitists
             next_population.extend(self._select_elites(current_fitness))

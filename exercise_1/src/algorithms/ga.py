@@ -20,6 +20,7 @@ class GeneticAltorithm():
         self.population: List[Any] = []
         self.best_fitness_in_generation: List[float] = []
         self.best_chromosome = None
+
     # genetic algorithm procedure
     def run(self):
         # create initial population
@@ -35,7 +36,7 @@ class GeneticAltorithm():
 
             # select elitists
             next_population.extend(self._select_elites(current_fitness))
-            
+
             # generate next generation by crossover and mutation
             while len(next_population) < self.population_size:
                 father = self._roulette(current_probabilities)

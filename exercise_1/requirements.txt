@@ -6,3 +6,4 @@ seaborn==0.12.1
 tqdm==4.64.1
 matplotlib==3.6.2
 scipy==1.9.3
+python-tsp==0.3.1

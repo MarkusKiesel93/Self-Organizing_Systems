@@ -54,12 +54,13 @@ class GeneticAltorithmTSP(GeneticAltorithm):
         child = np.copy(mother)
         child[father_gene_indices] = father[father_gene_indices]
         # correct child genes to get valid solution
-        # todo: select reandomly unused gene
-        genes_not_used = list(set(self.nodes).difference(set(child)))
-        if len(genes_not_used) > 0:
+        genes_not_used = np.setdiff1d(self.nodes, child)
+        if genes_not_used.size > 0:
             # correct only fahter part of solution
             for i in self.nodes[father_gene_indices]:
                 if child[i] in child[mother_gene_indices]:
-                    child[i] = genes_not_used.pop(0)
+                    selected_gene = np.random.choice(genes_not_used)
+                    genes_not_used = genes_not_used[genes_not_used != selected_gene]
+                    child[i] = selected_gene
         assert set(child) == set(self.nodes)  # check if valid solution
         return child

@@ -30,6 +30,15 @@ class TSPLoader():
         best_solution = self._load_values_by_line(path / 'five_s.txt')
         return df.values, best_solution
 
+    def _load_GR17(self):
+        path = self.DATA_PATH / 'GR17'
+        edge_valus = []
+        with open(path / 'gr17_d.txt', 'r') as file:
+            for line in file.readlines():
+                edge_valus.append([int(value) for value in line.rstrip().split(' ') if value != ''])
+        best_solution = self._load_values_by_line(path / 'gr17_s.txt')
+        return np.array(edge_valus), best_solution[:-1]
+
     def _load_ATT48(self):
         path = self.DATA_PATH / 'ATT48'
         edge_valus = []

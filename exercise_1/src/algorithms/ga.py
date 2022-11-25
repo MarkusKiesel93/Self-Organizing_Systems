@@ -62,9 +62,8 @@ class GeneticAltorithm():
         population_fitness = np.zeros(self.population_size)
         for i, chromosome in enumerate(self.population):
             population_fitness[i] = self._evaluate_fitness(chromosome)
-        fitness_probabilities = np.ones(self.population_size) - population_fitness / population_fitness.sum()
-        fitness_probabilities = fitness_probabilities / fitness_probabilities.sum()
-        return population_fitness, fitness_probabilities
+        minimization_fitness = np.ones(self.population_size) / population_fitness
+        return population_fitness, minimization_fitness / minimization_fitness.sum()
 
     # get the best performing chromosomes based on the fitness
     def _select_elites(self, fitness: List[float]) -> List[List[int]]:

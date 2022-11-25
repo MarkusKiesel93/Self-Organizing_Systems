@@ -14,6 +14,7 @@ class GeneticAltorithm():
         self.max_generations = kwargs.get('max_generations', 100)
         self.mutation_rate = kwargs.get('mutation_rate', 0.01)
         self.elitism_rate = kwargs.get('elitism_rate', 0.05)
+        self.two_children_per_crossover = kwargs.get('two_children_per_crossover', True)
 
         self.debug_mode = kwargs.get('debug_mode', False)
 
@@ -36,14 +37,15 @@ class GeneticAltorithm():
 
             # select elitists
             next_population.extend(self._select_elites(current_fitness))
-
             # generate next generation by crossover and mutation
             while len(next_population) < self.population_size:
                 father = self._roulette(current_probabilities)
                 mother = self._roulette(current_probabilities)
-                child = self._crossover(father, mother)
-                child = self._mutate(child)
-                next_population.append(child)
+                children = self._crossover(father, mother)
+                children = [self._mutate(child) for child in children]
+                next_population.append(children[0])
+                if self.two_children_per_crossover and len(next_population) < self.population_size:
+                    next_population.append(children[1])
             if self.debug_mode:
                 print(f'Generation: {generation + 1}')
                 print(f'Top fitness: {current_fitness[top_solution]}')
@@ -90,5 +92,5 @@ class GeneticAltorithm():
     def _mutate(self, chromosome: np.array) -> np.array:
         raise NotImplementedError('implment mutation logic in concrete problem implementation')
 
-    def _crossover(self, mother: np.array, father: np.array) -> np.array:
+    def _crossover(self, mother: np.array, father: np.array) -> List[np.array]:
         raise NotImplementedError('implment crossover logic in concrete problem implementation')

@@ -45,22 +45,29 @@ class GeneticAltorithmTSP(GeneticAltorithm):
         else:
             return chromosome
 
-    def _crossover(self, mother: np.array, father: np.array) -> np.array:
+    def _crossover(self, mother: np.array, father: np.array) -> List[np.array]:
         # create child from cossover of father and mother
         cutoff_from = random.randint(0, int(self.dimension / 2) - 1)
         cutoff_to = random.randint(int(self.dimension / 2), self.dimension - 1)
         father_gene_indices = np.array([val < cutoff_from or val > cutoff_to for val in range(self.dimension)])
         mother_gene_indices = ~father_gene_indices  # inverse indices of fahter
-        child = np.copy(mother)
-        child[father_gene_indices] = father[father_gene_indices]
+        first_child = np.copy(mother)
+        first_child[father_gene_indices] = father[father_gene_indices]
+        first_child = self._repair_chromosom(first_child, mother_gene_indices, father_gene_indices)
+        second_child = np.copy(father)
+        second_child[mother_gene_indices] = mother[mother_gene_indices]
+        second_child = self._repair_chromosom(second_child, father_gene_indices, mother_gene_indices)
+        return [first_child, second_child]
+
         # correct child genes to get valid solution
-        genes_not_used = np.setdiff1d(self.nodes, child)
+    def _repair_chromosom(self, chromosom, gene_indices_primary, gene_indices_secondary):
+        genes_not_used = np.setdiff1d(self.nodes, chromosom)
         if genes_not_used.size > 0:
             # correct only fahter part of solution
-            for i in self.nodes[father_gene_indices]:
-                if child[i] in child[mother_gene_indices]:
+            for i in self.nodes[gene_indices_secondary]:
+                if chromosom[i] in chromosom[gene_indices_primary]:
                     selected_gene = np.random.choice(genes_not_used)
                     genes_not_used = genes_not_used[genes_not_used != selected_gene]
-                    child[i] = selected_gene
-        assert set(child) == set(self.nodes)  # check if valid solution
-        return child
+                    chromosom[i] = selected_gene
+        assert set(chromosom) == set(self.nodes)  # check if valid solution
+        return chromosom

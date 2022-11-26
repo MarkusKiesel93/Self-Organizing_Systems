@@ -5,5 +5,6 @@ geneticalgorithm==1.0.2
 seaborn==0.12.1
 tqdm==4.64.1
 matplotlib==3.6.2
-scipy==1.9.3
+scipy==1.8.1
 python-tsp==0.3.1
+optuna==3.0.3

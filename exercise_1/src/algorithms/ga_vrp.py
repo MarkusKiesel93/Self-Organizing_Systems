@@ -88,7 +88,8 @@ class GeneticAltorithmVRP(GeneticAltorithm):
         population_fitness = np.zeros(self.population_size)
         for i in range(len(self.population)):
             population_fitness[i] = self.population[i].fitness
-        return population_fitness, population_fitness / population_fitness.sum()
+        minimization_fitness = np.ones(self.population_size) / population_fitness
+        return population_fitness, minimization_fitness / minimization_fitness.sum()
 
     def _evaluate_fitness(self, chromosome: np.array) -> float:
         total_distance = 0.0

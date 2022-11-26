@@ -18,6 +18,7 @@ class AntSystem():
         self.beta = kwargs.get('beta', 1)
         self.time = kwargs.get('time', 100)
         self.evaporation_coefficient: int = kwargs.get('evaporation_coefficient', 0.7)
+        self.pheromone_intensity = kwargs.get('pheromone_intensity', 1)
         self.number_of_ants = kwargs.get('number_of_ants', 20)
         self.debug_mode = kwargs.get('debug_mode', False)
 
@@ -29,7 +30,14 @@ class AntSystem():
         self.capacity = kwargs.get('capacity', None)
 
     def run(self) -> None:
-        ants = [self.ant_class(self.problem_instance, self.nodes, count=i, demand=self.demand, capacity=self.capacity) for i in range(self.number_of_ants)]
+        # create ants
+        ants = [self.ant_class(
+            self.problem_instance,
+            self.nodes,
+            pheromone_intensity=self.pheromone_intensity,
+            count=i,
+            demand=self.demand,
+            capacity=self.capacity) for i in range(self.number_of_ants)]
         # iterate time points
         for t in tqdm(np.arange(self.time), desc='Time Point: '):
             # recalculate transition probabilities because of pheromone updates
@@ -59,9 +67,6 @@ class AntSystem():
             'fitness': self.best_fitness_at_time_point
         })
 
-    # todo: why calculated by ant k ?
-    # todo: it seems to me the information is the same for all ants
-    # todo: maybe only consider whicht nodes already visited by ant and resacel probabilities in Ant?
     def _caluclate_transition_probabilities(self):
         probabilities = np.zeros(self.problem_instance.shape)
         # nominator for each inedx i, j

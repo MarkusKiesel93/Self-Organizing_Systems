@@ -3,10 +3,10 @@ import numpy as np
 
 
 class Ant():
-    def __init__(self, weights, nodes, **kwargs) -> None:
+    def __init__(self, weights, nodes, pheromone_intensity=1, **kwargs) -> None:
         self.weights: np.ndarray = weights
         self.nodes = nodes
-        self.pheromone_intensity = 1  # todo: what is this constant ??
+        self.pheromone_intensity = pheromone_intensity
 
         self.start_node = np.random.choice(self.nodes)
         self.current_node = self.start_node

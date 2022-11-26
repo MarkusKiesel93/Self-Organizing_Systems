@@ -27,13 +27,12 @@ class AntVRP(Ant):
         self.fitness: float = self.weights[0][self.current_node] # all routes must start from depot
 
     # move ant from one node to another based on the transition probabilities
-    def move(self, **kwargs) -> None:
+    def move(self, candidate_ratio=1) -> None:
 
         # use probabilitys at current node -> only consider not visited nodes + depot
         probabilities_at_current_node = self.probabilities[self.current_node]
 
         # use candidates to only consider nearest nodes
-        candidate_ratio = kwargs.get("candidate_ratio", 1)
         candidate_index = int(candidate_ratio * len(self.nodes))
         distances = np.argsort(self.weights[self.current_node][self.nodes_not_visited])[:candidate_index]
         candidates = self.nodes_not_visited[distances]

@@ -6,7 +6,7 @@ class Ant():
     def __init__(self, weights, nodes, **kwargs) -> None:
         self.weights: np.ndarray = weights
         self.nodes = nodes
-        self.pheromone_intensity = 1  # todo: what is this constant ??
+        self.pheromone_intensity = 1 # todo: what is this constant ??
 
         self.start_node = np.random.choice(self.nodes)
         self.current_node = self.start_node
@@ -17,7 +17,7 @@ class Ant():
         self.probabilities: np.ndarray = None
 
     # reset ant values for new iteration and set probabilities for run
-    def prepare(self, probabilities):
+    def prepare(self, probabilities, **kwargs):
         self.fitness = 0.0
         self.path = [self.current_node]
         self.nodes_not_visited = self.nodes[self.nodes != self.current_node]

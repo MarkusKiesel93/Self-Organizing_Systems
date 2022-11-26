@@ -1,6 +1,8 @@
 import re
+from typing import Tuple
 import numpy as np
 import pandas as pd
+
 
 from src.config import config
 
@@ -10,7 +12,7 @@ class TSPLoader():
         self.DATA_PATH = config.DATA_PATH / 'tsp'
         self.porblem_name = problem_name
 
-    def load_problem_instance(self) -> np.ndarray:
+    def load_problem_instance(self) -> Tuple[np.ndarray, np.array]:
         method_name = f'_load_{self.porblem_name}'
         try:
             method = getattr(self, method_name)  # gets the function by method name
@@ -38,6 +40,14 @@ class TSPLoader():
                 edge_valus.append([int(value) for value in line.rstrip().split(' ') if value != ''])
         best_solution = self._load_values_by_line(path / 'gr17_s.txt')
         return np.array(edge_valus), best_solution[:-1]
+
+    def _load_DANTZIG42(self):
+        path = self.DATA_PATH / 'DANTZIG42'
+        edge_valus = []
+        with open(path / 'dantzig42_d.txt', 'r') as file:
+            for line in file.readlines():
+                edge_valus.append([int(value) for value in line.rstrip().split(' ') if value != ''])
+        return np.array(edge_valus), None  # no best solution found but known value (699)
 
     def _load_ATT48(self):
         path = self.DATA_PATH / 'ATT48'

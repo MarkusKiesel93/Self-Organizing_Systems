@@ -46,8 +46,12 @@ class AntVRP(Ant):
             selected_node = nodes_not_visited_next[0]
         else:
             probabilities_not_visited = probabilities_at_current_node[nodes_not_visited_next]
-            probabilities_not_visited /= probabilities_not_visited.sum()  # rescale to norm 1
-         
+            probability_sum = probabilities_not_visited.sum()
+            if probability_sum == 0:
+                probabilities_not_visited = None # draw randomly (uniform) if no option is prefered
+            else:
+                probabilities_not_visited /= probability_sum  # rescale to norm 1
+
             selected_node = np.random.choice(nodes_not_visited_next, p=probabilities_not_visited)
 
         self.pheromones_segregated[self.current_node][selected_node] += self.pheromone_intensity

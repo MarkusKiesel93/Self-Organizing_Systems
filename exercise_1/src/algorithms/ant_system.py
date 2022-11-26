@@ -1,8 +1,8 @@
 from typing import List
 import numpy as np
 import pandas as pd
+import optuna
 from tqdm import tqdm
-
 from .ant import Ant
 
 
@@ -48,7 +48,7 @@ class AntSystem():
         self.demand = kwargs.get('demand', None)
         self.capacity = kwargs.get('capacity', None)
 
-    def run(self) -> None:
+    def run(self, trial=None) -> None:
         # create ants
         ants = [self.ant_class(
             self.problem_instance,
@@ -90,6 +90,12 @@ class AntSystem():
                 print(f'Solution: {ants[self._top_ant].path}')
             # update pheromones
             self._update_pheromones(ants, trail_update=self.trail_update, best_rate=self.best_rate)
+
+            if not trial is None:
+                trial.report(self._fitness_all_ants[self._top_ant], t)
+
+                if trial.should_prune():
+                    raise optuna.TrialPruned()
 
     def fitness_df(self) -> pd.DataFrame:
         return pd.DataFrame({

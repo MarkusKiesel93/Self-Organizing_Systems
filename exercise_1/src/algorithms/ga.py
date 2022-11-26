@@ -1,6 +1,7 @@
 from typing import List, Tuple, Any
 import numpy as np
 import pandas as pd
+import optuna
 from tqdm import tqdm
 
 
@@ -23,7 +24,7 @@ class GeneticAltorithm():
         self.best_solution = None
 
     # genetic algorithm procedure
-    def run(self):
+    def run(self, trial=None):
         # create initial population
         self.population = self._generate_initial_population()
         # run for max_generations
@@ -51,6 +52,13 @@ class GeneticAltorithm():
                 print(f'Top fitness: {current_fitness[top_solution]}')
                 print(f'Solution: {self.population[top_solution]}')
             self.population = next_population
+
+            # report score for pruning
+            if not trial is None:
+                trial.report(current_fitness[top_solution], generation)
+
+                if trial.should_prune():
+                    raise optuna.TrialPruned()
 
     def fitness_df(self) -> pd.DataFrame:
         return pd.DataFrame({

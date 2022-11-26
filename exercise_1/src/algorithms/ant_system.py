@@ -29,6 +29,9 @@ class AntSystem():
 
             self.visibility = di0 + d0j - problem_instance.astype('float64') * g + f * np.absolute(di0 - d0j)
 
+        self.candidate_ratio = kwargs.get("candidate_ratio")
+        self.best_rate = kwargs.get("best_rate", 0.1)
+        self.trail_update = kwargs.get("trail_update", "all")
         self.alpha = kwargs.get('alpha', 1)
         self.beta = kwargs.get('beta', 1)
         self.time = kwargs.get('time', 100)
@@ -63,7 +66,7 @@ class AntSystem():
             for ant in ants:
                 ant.prepare(transition_probabilities)
                 while not ant.has_finished():
-                    ant.move(**kwargs)
+                    ant.move(self.candidate_ratio)
                 self._fitness_all_ants.append(ant.fitness)
             # evaluate ants
             self._top_ant = np.argsort(self._fitness_all_ants)[0]
@@ -83,7 +86,7 @@ class AntSystem():
                 print(f'Visibility: {self.visibility}')
                 print(f'Solution: {ants[self._top_ant].path}')
             # update pheromones
-            self._update_pheromones(ants, **kwargs)
+            self._update_pheromones(ants, trail_update=self.trail_update, best_rate=self.best_rate)
 
     def fitness_df(self) -> pd.DataFrame:
         return pd.DataFrame({
@@ -105,22 +108,22 @@ class AntSystem():
         return np.maximum(0,probabilities)
 
     # apply update rule to update trail_intensity matrix after iteration
-    def _update_pheromones(self, ants, **kwargs):
+    def _update_pheromones(self, ants, trail_update="all", best_rate=0.1):
 
         # collect pheromons over all ants
-        if kwargs.get("trail_update", "all") == "all":
+        if trail_update == "all":
             pheromone_updates = np.zeros(self.problem_instance.shape)
             
             for ant in ants:
                 pheromone_updates += ant.pheromones_segregated
 
         # collect pheromons only from best ant    
-        elif kwargs.get("trail_update", "all") == "best":
+        elif trail_update == "best":
             pheromone_updates = ants[self._top_ant].pheromones_segregated * len(ants) # scale pheromone intensity
         
         # collect pheromons from best_rate * len(ants) ants + ellitist ant
-        elif kwargs.get("trail_update", "all") == "elitist":
-            best_rate = kwargs.get("best_rate", 0.1)
+        elif trail_update == "elitist":
+            best_rate =best_rate
             best_num = best_rate * len(ants)
 
             # use pheromones from best ants

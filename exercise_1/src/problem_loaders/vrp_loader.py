@@ -29,6 +29,7 @@ class VRPLoader():
             
         assert distance.diagonal().sum() == 0.0  # weights to same node have to be 0
         assert distance.shape[0] == distance.shape[1]  # symmetric matrix
+        assert np.min(distance) >= 0
         return coordinates, distance, demand, capacity, best_solution, cost
        
 

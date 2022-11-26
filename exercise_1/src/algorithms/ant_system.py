@@ -15,7 +15,7 @@ class AntSystem():
 
         visibility_choice = kwargs.get("visibility", "distance")
         if visibility_choice == "distance":
-            self.visibility = np.maximum(np.power(problem_instance.astype('float64'), -1, where=(problem_instance != 0.0)), 0)  # 1/n_ij
+            self.visibility = np.maximum(np.power(problem_instance.astype('float64'), -1, where=(problem_instance != 0.0)), 0).astype(np.longdouble)  # 1/n_ij
         elif visibility_choice == "saving_function":
             # n_ij = d_i0 + d_0j - g* d_ij + f * |d_i0 - d_0j|
             f = kwargs.get("f", 2)
@@ -27,7 +27,7 @@ class AntSystem():
 
             d0j[:,:] = problem_instance[0,:]
 
-            self.visibility = di0 + d0j - problem_instance.astype('float64') * g + f * np.absolute(di0 - d0j)
+            self.visibility = (di0 + d0j - problem_instance.astype('float64') * g + f * np.absolute(di0 - d0j)).astype(np.longdouble)
 
         self.candidate_ratio = kwargs.get("candidate_ratio")
         self.best_rate = kwargs.get("best_rate", 0.1)
@@ -40,7 +40,7 @@ class AntSystem():
         self.number_of_ants = kwargs.get('number_of_ants', 20)
         self.debug_mode = kwargs.get('debug_mode', False)
 
-        self.trail_intensity: np.ndarray = np.full(self.problem_instance.shape, 0.001)  # tau
+        self.trail_intensity: np.ndarray = np.full(self.problem_instance.shape, 0.001, dtype=np.longdouble)  # tau
         self.best_fitness_at_time_point: List[float] = []
         self.best_path: List[int] = []
 
@@ -101,7 +101,7 @@ class AntSystem():
         })
 
     def _caluclate_transition_probabilities(self):
-        probabilities = np.zeros(self.problem_instance.shape)
+        probabilities = np.zeros(self.problem_instance.shape, dtype=np.longdouble)
         # nominator for each inedx i, j
         for node_from in self.nodes:
             for node_to in self.nodes:

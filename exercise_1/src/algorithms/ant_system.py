@@ -89,9 +89,9 @@ class AntSystem():
             self._update_pheromones(ants, trail_update=self.trail_update, best_rate=self.best_rate)
 
             if not trial is None:
-                trial.report(self._fitness_all_ants[self._top_ant])
+                trial.report(self._fitness_all_ants[self._top_ant], t)
 
-                if trial.shouldPrune():
+                if trial.should_prune():
                     raise optuna.TrialPruned()
 
     def fitness_df(self) -> pd.DataFrame:

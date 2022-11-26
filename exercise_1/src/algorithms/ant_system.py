@@ -56,7 +56,10 @@ class AntSystem():
             pheromone_intensity=self.pheromone_intensity,
             count=i,
             demand=self.demand,
-            capacity=self.capacity) for i in range(self.number_of_ants)]
+            capacity=self.capacity,
+            alpha=self.alpha,
+            beta=self.beta
+            ) for i in range(self.number_of_ants)]
         # iterate time points
         for t in tqdm(np.arange(self.time), desc='Time Point: '):
             # recalculate transition probabilities because of pheromone updates

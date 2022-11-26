@@ -1,6 +1,7 @@
 from typing import List, Tuple
 import random
 import math
+import optuna
 
 import numpy as np
 import scipy.spatial
@@ -29,7 +30,7 @@ class GeneticAltorithmVRP(GeneticAltorithm):
         self.num_vehicles = 0
 
     # genetic algorithm procedure
-    def run(self):
+    def run(self, trial=None):
         # create initial population
         self.population = self._generate_initial_population()
         # run for max_generations
@@ -56,6 +57,13 @@ class GeneticAltorithmVRP(GeneticAltorithm):
                 print(f'Top fitness: {current_fitness[top_solution]}')
                 print(f'Solution: {self.population[top_solution]}')
             self.population = next_population
+
+            # report score for pruning
+            if not trial is None:
+                trial.report(current_fitness[top_solution], generation)
+
+                if trial.should_prune():
+                    raise optuna.TrialPruned()
 
     def _get_paths(self, chromosome) -> Tuple[List[np.ndarray], float]:
         """

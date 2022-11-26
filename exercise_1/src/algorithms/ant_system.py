@@ -12,7 +12,7 @@ class AntSystem():
         self.problem_instance: np.ndarray = problem_instance
         self.dimension: int = self.problem_instance.shape[0]
         self.nodes: np.array = np.arange(self.dimension)
-        self.visibility = np.power(problem_instance.astype('float64'), -1, where=(problem_instance != 0.0))  # 1/n_ij
+        self.visibility = np.maximum(np.power(problem_instance.astype('float64'), -1, where=(problem_instance != 0.0)), 0)  # 1/n_ij
 
         self.alpha = kwargs.get('alpha', 1)
         self.beta = kwargs.get('beta', 1)

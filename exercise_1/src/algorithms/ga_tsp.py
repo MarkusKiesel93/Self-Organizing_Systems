@@ -61,6 +61,7 @@ class GeneticAltorithmTSP(GeneticAltorithm):
             return chromosome
 
     def _crossover(self, mother: np.array, father: np.array) -> List[np.array]:
+        children = []
         # create child from cossover of father and mother
         cutoff_from = random.randint(0, int(self.dimension / 2) - 1)
         cutoff_to = random.randint(int(self.dimension / 2), self.dimension - 1)
@@ -69,12 +70,15 @@ class GeneticAltorithmTSP(GeneticAltorithm):
         first_child = np.copy(mother)
         first_child[father_gene_indices] = father[father_gene_indices]
         first_child = self._repair_chromosom(first_child, mother_gene_indices, father_gene_indices)
-        second_child = np.copy(father)
-        second_child[mother_gene_indices] = mother[mother_gene_indices]
-        second_child = self._repair_chromosom(second_child, father_gene_indices, mother_gene_indices)
-        return [first_child, second_child]
+        children.append(first_child)
+        if self.two_children_per_crossover:
+            second_child = np.copy(father)
+            second_child[mother_gene_indices] = mother[mother_gene_indices]
+            second_child = self._repair_chromosom(second_child, father_gene_indices, mother_gene_indices)
+            children.append(second_child)
+        return children
 
-        # correct child genes to get valid solution
+    # correct child genes to get valid solution
     def _repair_chromosom(self, chromosom, gene_indices_primary, gene_indices_secondary):
         genes_not_used = np.setdiff1d(self.nodes, chromosom)
         if genes_not_used.size > 0:

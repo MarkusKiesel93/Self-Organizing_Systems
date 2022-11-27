@@ -254,7 +254,7 @@ class GeneticAltorithmVRP(GeneticAltorithm):
             return Solution(child2_chromosomes, child_fitness, child_unfitness)
         else:
             # uniform crossover
-            random_indices = np.randint(0,1,(self.dimension,))
+            random_indices = random.randint(0,1,(self.dimension,))
             child_chromosomes = np.copy(mother.chromosome)
             child_chromosomes[random_indices] = father.chromosome[random_indices]
             child_unfitness = self._evaluate_unfitness(child_chromosomes)

@@ -8,7 +8,7 @@ class AntTSP(Ant):
         super().__init__(weights, nodes, **kwargs)
 
     # move ant from one node to another based on the transition probabilities
-    def move(self) -> None:
+    def move(self, *args, **kwargs) -> None:
         # use probabilitys at current node -> only consider not visited nodes
         probabilities_at_current_node = self.probabilities[self.current_node]
         proabilities_not_visited = probabilities_at_current_node[self.nodes_not_visited]

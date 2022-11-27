@@ -54,7 +54,7 @@ class GeneticAltorithm():
             self.population = next_population
 
             # report score for pruning
-            if not trial is None:
+            if trial is not None:
                 trial.report(current_fitness[top_solution], generation)
 
                 if trial.should_prune():

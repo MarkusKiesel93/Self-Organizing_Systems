@@ -25,7 +25,7 @@ class Ant():
         self.probabilities = probabilities
 
     # move ant from one node to another based on the transition probabilities
-    def move(self) -> None:
+    def move(self, *args, **kwargs) -> None:
         raise NotImplementedError('implment how ant moves')
 
     # determine when ant is finished

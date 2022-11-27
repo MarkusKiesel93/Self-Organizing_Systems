@@ -56,6 +56,16 @@ class TSPLoader():
         best_solution = self._load_values_by_line(path / 'gr17_s.txt')
         return problem_instance, self._fitness(problem_instance, best_solution[:-1])
 
+    def _load_FRI26(self):
+        path = self.DATA_PATH / 'FRI26'
+        edge_valus = []
+        with open(path / 'fri26_d.txt', 'r') as file:
+            for line in file.readlines():
+                edge_valus.append([int(value) for value in line.rstrip().split(' ') if value != ''])
+        problem_instance = np.array(edge_valus)
+        best_solution = self._load_values_by_line(path / 'fri26_s.txt')
+        return problem_instance, self._fitness(problem_instance, best_solution[:-1])
+
     def _load_DANTZIG42(self):
         path = self.DATA_PATH / 'DANTZIG42'
         edge_valus = []

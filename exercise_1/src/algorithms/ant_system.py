@@ -114,7 +114,7 @@ class AntSystem():
                 )
         # denominator -> devide by sum in row -> get probabilities
         probabilities /= probabilities.sum(axis=1, keepdims=True)
-        return np.maximum(0,probabilities).astype(np.float32)
+        return np.maximum(0,probabilities).astype(np.float64)
 
     # apply update rule to update trail_intensity matrix after iteration
     def _update_pheromones(self, ants, trail_update="all", best_rate=0.1):

@@ -8,8 +8,8 @@ C5, C3, C10
 
 # Aufgabenteilung
 
-Alex: F2 + C3
-Markus: F7 + C5
-Laurenz: F3 + C10
+Alex:  Schwefel function (F2) && 𝑥 > 𝑦 + 20 𝑜𝑟 𝑥 < 𝑦 – 20 (C3)
+Markus:  Booth’s function (F7) &&  𝑥2 + 𝑦2 < 9000 𝑎𝑛𝑑 𝑥2 + 𝑦2 > 4000 (C5)
+Laurenz: Shubert function (F3) && tan(𝑥 𝑦) < 1 (C10)
 
-Implemetierung einer eigenen Penalty-Funktion für Constrainthandeling
+Implemetierung einer eigenen Penalty-Funktion für Constraint-handeling und vergleiche penalty function mit der bereits implementierten rejection strategy.

@@ -365,9 +365,11 @@ to-report constrain_4 [x y]
   report FALSE
 end
 
-; dummy random constrinat to be implemented by students
+; constrinat c5(x, y): x > y
 to-report constrain_5 [x y]
-  report FALSE
+  ifelse x > y
+  [report TRUE]
+  [report FALSE]
 end
 
 ; dummy random constrinat to be implemented by students

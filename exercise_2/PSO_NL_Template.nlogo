@@ -82,8 +82,8 @@ to initialize-topology
      if fitness_function = "Shubert function"
        [set val shubert_function pxcor pycor]
 
-     if fitness_function  = "Fitness function 2"
-       [set val fittness_function_2 pxcor pycor]
+     if fitness_function  = "Booth's function"
+       [set val booths_function pxcor pycor]
 
      if fitness_function = "Fitness function 3"
        [set val fittness_function_3 pxcor pycor]
@@ -314,9 +314,9 @@ to-report shubert_function [x y]
   report t1 * t2;
 end
 
-; dummy random fitness function to be implemented by students
-to-report fittness_function_2 [x y]
-  report random-normal 0 1;
+; Booth's function
+to-report booths_function [x y]
+  report (x + 2 * y - 7) ^ 2 + (2 * x + y - 5) ^ 2
 end
 
 ; dummy random fitness function to be implemented by students
@@ -683,7 +683,7 @@ CHOOSER
 55
 fitness_function
 fitness_function
-"Example function" "Shubert function" "Fitness function 2" "Fitness function 3" "Fitness function 4" "Fitness function 5" "Fitness function 6"
+"Example function" "Shubert function" "Booth's function" "Fitness function 2" "Fitness function 3" "Fitness function 4" "Fitness function 5" "Fitness function 6"
 1
 
 SWITCH
@@ -836,7 +836,6 @@ HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
-
 @#$#@#$#@
 default
 true

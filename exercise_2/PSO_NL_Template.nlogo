@@ -85,8 +85,8 @@ to initialize-topology
      if fitness_function  = "Booth's function"
        [set val booths_function pxcor pycor]
 
-     if fitness_function = "Fitness function 3"
-       [set val fittness_function_3 pxcor pycor]
+     if fitness_function = "Schwefel function"
+       [set val schwefel_function pxcor pycor]
 
      if fitness_function = "Fitness function 4"
        [set val fittness_function_4 pxcor pycor]
@@ -320,8 +320,13 @@ to-report booths_function [x y]
 end
 
 ; dummy random fitness function to be implemented by students
-to-report fittness_function_3 [x y]
-  report random-normal 0 1;
+to-report schwefel_function [x y]
+  let a 418.9829
+  let s 0
+  set s s + (-1 * x * sin(sqrt(abs(x))))
+  set s s + (-1 * y * sin(sqrt(abs(y))))
+
+  report s + (a * 2);
 end
 
 ; dummy random fitness function to be implemented by students
@@ -357,7 +362,9 @@ end
 
 ; dummy random constrinat to be implemented by students
 to-report constrain_3 [x y]
-  report FALSE
+  ifelse (x > y + 20) or (x < y - 20)
+  [report TRUE]
+  [report FALSE]
 end
 
 ; dummy random constrinat to be implemented by students
@@ -498,8 +505,8 @@ GRAPHICS-WINDOW
 100
 -100
 100
-1
-1
+0
+0
 1
 ticks
 40.0
@@ -547,7 +554,7 @@ population-size
 population-size
 1
 100
-47.0
+14.0
 1
 1
 NIL
@@ -577,7 +584,7 @@ swarm-confidence
 swarm-confidence
 0
 2
-1.6
+1.3
 0.1
 1
 NIL
@@ -634,7 +641,7 @@ particle-speed-limit
 particle-speed-limit
 1
 20
-17.0
+10.0
 1
 1
 NIL
@@ -681,12 +688,12 @@ NIL
 CHOOSER
 10
 10
-155
+167
 55
 fitness_function
 fitness_function
-"Example function" "Shubert function" "Booth's function" "Fitness function 2" "Fitness function 3" "Fitness function 4" "Fitness function 5" "Fitness function 6"
-1
+"Example function" "Shubert function" "Booth's function" "Schwefel function"
+3
 
 SWITCH
 10
@@ -801,7 +808,7 @@ CHOOSER
 Constraint
 Constraint
 "Example" "Constraint 1" "Constraint 2" "Constraint 3" "Constraint 4" "Constraint 5" "Constraint 6" "Constraint 7" "Constraint 8" "Constraint 9" "Constraint 10"
-8
+3
 
 PLOT
 10

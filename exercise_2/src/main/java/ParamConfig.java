@@ -1,3 +1,4 @@
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public final class ParamConfig {
 
     public static final Map<String, Object> DEFAULTS = Map.of(
             "fitnessFunction", FITNESS_FUNCTION_SUBERT,
-            "useConstraints", false,
+            "useConstraint", false,
             "constraintHandlingMethod", CONSTRAINT_HANDLING_REJECTION,
             "constraint", CONSTRAINT_3,
             "particleSpeedLimit", PARTICLE_SPEED_LIMIT_DEFAULT,
@@ -79,9 +80,9 @@ public final class ParamConfig {
             "constraintR", CONSTRAINT_R_MAX
     );
 
-    public static final Map<String, String> MAPPING = Map.of(
+    public static final Map<String, String> NETLOGO_MAPPING = Map.of(
             "fitnessFunction", "fitness_function",
-            "useConstraints", "constraints",
+            "useConstraint", "constraints",
             "constraintHandlingMethod", "constraint_handling_method",
             "constraint", "Constraint",
             "particleSpeedLimit", "particle-speed-limit",
@@ -91,6 +92,20 @@ public final class ParamConfig {
             "particleInertia", "particle-inertia",
             "constraintR", "constraint_r"
     );
+
+    public static final LinkedHashMap<String, String> OUTPUT_MAPPING_SORTED = new LinkedHashMap<>();
+    static {
+        OUTPUT_MAPPING_SORTED.put("fitness_function", "fitness_function");
+        OUTPUT_MAPPING_SORTED.put("constraints", "use_constraint");
+        OUTPUT_MAPPING_SORTED.put("constraint_handling_method", "constraint_handling_method");
+        OUTPUT_MAPPING_SORTED.put("Constraint", "constraint");
+        OUTPUT_MAPPING_SORTED.put("particle-speed-limit", "particle_speed_limit");
+        OUTPUT_MAPPING_SORTED.put("population-size", "population_size");
+        OUTPUT_MAPPING_SORTED.put("personal-confidence", "personal_confidence");
+        OUTPUT_MAPPING_SORTED.put("swarm-confidence", "swarm_confidence");
+        OUTPUT_MAPPING_SORTED.put("particle-inertia", "particle_inertia");
+        OUTPUT_MAPPING_SORTED.put("constraint_r", "constraint_r");
+    }
 
     public static void checkConstraint(String paramName, Object value) {
         if (ParamConfig.MIN.containsKey(paramName)) {

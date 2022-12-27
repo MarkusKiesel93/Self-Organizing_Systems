@@ -1,6 +1,7 @@
 import org.nlogo.app.App;
 import org.nlogo.nvm.InstructionJ;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.*;
 // Netlogo Controlling API: https://github.com/NetLogo/NetLogo/wiki/Controlling-API
 public class Main {
 
-    private static final int ITERATIONS_BY_EXPERIMENT = 20;
+    private static final int ITERATIONS_BY_EXPERIMENT = 1;
     private static final int MAX_ITERATIONS_BY_RUN = 500;
     private static final String MODEL_FILE_NAME = "PSO_NL_Template.nlogo";
     public static final String OUTPUT_FILE_NAME = "results.csv";
@@ -42,7 +43,7 @@ public class Main {
     }
 
     // loop for all experiments
-    private static void runAllExperiments() {
+    private static void runAllExperiments() throws IOException {
         // setup experiments and output writer
         ExperimentSetup.setup();
         List<Experiment> allExperiments = ExperimentSetup.getExperiments();
@@ -50,8 +51,6 @@ public class Main {
         OutputWriter outputWriter = new OutputWriter(outputFilePath);
         // multiple iterations by experiment
         for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
-            // setup for new iteration run
-            App.app().command("setup");
             for (Experiment experiment : allExperiments) {
                 System.out.println("Start Experiment " + experiment.getNumber() + " iteration " + i);
                 runExperiment(experiment);
@@ -59,15 +58,20 @@ public class Main {
                 outputWriter.writeExperiment(experiment, i);
             }
         }
+        outputWriter.close();
     }
 
     // steps performed for one experiment
     private static void runExperiment(Experiment experiment) {
-        repeat();
         setParams(experiment.getParameters());
+        setup();
         run();
         report(experiment);
         // todo: maybe use save command from NetLogo to store the experiment
+    }
+
+    private static void setup() {
+        App.app().command("setup");
     }
 
     // NetLogo run command
@@ -78,6 +82,7 @@ public class Main {
     // NetLogo extract variables of interest
     private static void report(Experiment experiment) {
         experiment.setFitness((double) App.app().report("global-best-val"));
+        experiment.setOptimum((double) App.app().report("[val] of true-best-patch"));
         // todo: extract numberOfIterations until optimum reached
         experiment.setNumberOfIterations((int) (double) App.app().report("iterations"));
     }

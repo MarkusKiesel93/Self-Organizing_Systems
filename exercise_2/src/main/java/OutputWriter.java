@@ -16,6 +16,7 @@ public class OutputWriter {
     }
 
     public void close() throws IOException {
+        fileWriter.flush();
         fileWriter.close();
     }
 
@@ -37,6 +38,7 @@ public class OutputWriter {
         line.append(experiment.getNumberOfIterations());
         line.append("\n");
         fileWriter.write(line.toString());
+        fileWriter.flush();
     }
 
     private void writeHeading() throws IOException {
@@ -49,6 +51,7 @@ public class OutputWriter {
         line.append("fitness,optimum,iterations_to_opt");
         line.append("\n");
         fileWriter.write(line.toString());
+        fileWriter.flush();
     }
 
 }

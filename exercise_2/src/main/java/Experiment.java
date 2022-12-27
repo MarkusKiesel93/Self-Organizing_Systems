@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import org.nlogo.app.App;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -15,7 +17,9 @@ import java.util.Map;
 @Builder
 public class Experiment {
 
+    // parameters
     private String fitnessFunction;
+    private Boolean useConstraints;
     private String constraintHandlingMethod;
     private String constraint;
     private Integer particleSpeedLimit;
@@ -23,59 +27,41 @@ public class Experiment {
     private Double personalConfidence;
     private Double swarmConfidence;
     private Double particleInertia;
-    private Double constraintRate;
+    private Double constraintR;
 
-    // creates a Map for all parameters with the mapped parameter values
+    // results
+    private double fitness;
+    private int numberOfIterations;
+
+    // other
+    private int number; // number of experiment
+    private Map<String, Object> parameters;
+
+    public Map<String, Object> getParameters() {
+        if (this.parameters == null || this.parameters.size() == 0) {
+            createParams();
+        }
+        return this.parameters;
+    }
+
+    // creates a sorted Map for all parameters with the mapped parameter values
     // defaults as configured in ParamConfig are used if not set in Experiment
-    public Map<String, Object> parameters() {
-        Map<String, Object> params = new HashMap<>();
-        Field[] fields = getClass().getDeclaredFields(); // get all the fields from your class.
-        for (Field field : fields) {
-            try {
-                String fieldName = field.getName();
-                if (field.get(this) == null) {
-                    field.set(this, ParamConfig.DEFAULTS.get(fieldName));
+    private void createParams() {
+        this.parameters = new HashMap<>();
+        Arrays.stream(getClass().getDeclaredFields()).forEach(field -> {
+            String fieldName = field.getName();
+            if (ParamConfig.MAPPING.containsKey(fieldName)) {
+                try {
+                    if (field.get(this) == null) {
+                        field.set(this, ParamConfig.DEFAULTS.get(fieldName));
+                    }
+                    ParamConfig.checkConstraint(fieldName, field.get(this));
+                    this.parameters.put(ParamConfig.MAPPING.get(field.getName()), field.get(this));
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    ex.printStackTrace();
                 }
-                checkConstraint(fieldName, field.get(this));
-                params.put(ParamConfig.MAPPING.get(field.getName()), field.get(this));
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
             }
-        }
-        return params;
+        });
     }
 
-
-    private void checkConstraint(String paramName, Object value) {
-        if (ParamConfig.MIN.containsKey(paramName)) {
-            if (value instanceof Integer) {
-                int min = (int) ParamConfig.MIN.get(paramName);
-                if ((int) value < min) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
-                }
-            }
-            if (value instanceof Double) {
-                double min = (double) ParamConfig.MIN.get(paramName);
-                if ((double) value < min) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
-                }
-            }
-        }
-        if (ParamConfig.MAX.containsKey(paramName)) {
-            if (value instanceof Integer) {
-                int max = (int) ParamConfig.MAX.get(paramName);
-                if ((int) value > max) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
-                }
-            }
-            if (value instanceof Double) {
-                double max = (double) ParamConfig.MAX.get(paramName);
-                if ((double) value > max) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
-                }
-            }
-        }
-    }
 }

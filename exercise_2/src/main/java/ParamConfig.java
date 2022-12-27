@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Map;
 
 public final class ParamConfig {
@@ -33,20 +34,31 @@ public final class ParamConfig {
     public static final double SWARM_CONFIDENCE_DEFAULT = 1.3;
     public static final double SWARM_CONFIDENCE_MAX = 2.0;
 
-    public static final double CONSTRAINT_R_MIN = 0.0;
-    public static final double CONSTRAINT_R_DEFAULT = 50.0;
-    public static final double CONSTRAINT_R_MAX = 100;
+    public static final double CONSTRAINT_R_MIN = -1.0;
+    public static final double CONSTRAINT_R_DEFAULT = -0.65;
+    public static final double CONSTRAINT_R_MAX = 0.0;
+
+    public static final List<String> FITNESS_FUNCTIONS = List.of(
+            FITNESS_FUNCTION_SUBERT, FITNESS_FUNCTION_BOOTH, FITNESS_FUNCTION_SCHWEFEL);
+
+    public static final List<String> CONSTRAINTS = List.of(
+            CONSTRAINT_3, CONSTRAINT_5, CONSTRAINT_10);
+
+    public static final List<String> CONSTRAINT_HANDLING_OPTIONS = List.of(
+            CONSTRAINT_HANDLING_PENALTY, CONSTRAINT_HANDLING_REJECTION
+    );
 
     public static final Map<String, Object> DEFAULTS = Map.of(
             "fitnessFunction", FITNESS_FUNCTION_SUBERT,
+            "useConstraints", false,
             "constraintHandlingMethod", CONSTRAINT_HANDLING_REJECTION,
-            "constraint", CONSTRAINT_5,
+            "constraint", CONSTRAINT_3,
             "particleSpeedLimit", PARTICLE_SPEED_LIMIT_DEFAULT,
             "populationSize", POPULATION_SIZE_DEFAULT,
             "personalConfidence", PERSONAL_CONFIDENCE_DEFAULT,
             "swarmConfidence", SWARM_CONFIDENCE_DEFAULT,
             "particleInertia", PARTICLE_INERTIA_DEFAULT,
-            "constraintRate", CONSTRAINT_R_DEFAULT
+            "constraintR", CONSTRAINT_R_DEFAULT
     );
 
     public static final Map<String, Object> MIN = Map.of(
@@ -55,7 +67,7 @@ public final class ParamConfig {
             "personalConfidence", PERSONAL_CONFIDENCE_MIN,
             "swarmConfidence", SWARM_CONFIDENCE_MIN,
             "particleInertia", PARTICLE_INERTIA_MIN,
-            "constraintRate", CONSTRAINT_R_MIN
+            "constraintR", CONSTRAINT_R_MIN
     );
 
     public static final Map<String, Object> MAX = Map.of(
@@ -64,11 +76,12 @@ public final class ParamConfig {
             "personalConfidence", PERSONAL_CONFIDENCE_MAX,
             "swarmConfidence", SWARM_CONFIDENCE_MAX,
             "particleInertia", PARTICLE_INERTIA_MAX,
-            "constraintRate", CONSTRAINT_R_MAX
+            "constraintR", CONSTRAINT_R_MAX
     );
 
     public static final Map<String, String> MAPPING = Map.of(
             "fitnessFunction", "fitness_function",
+            "useConstraints", "constraints",
             "constraintHandlingMethod", "constraint_handling_method",
             "constraint", "Constraint",
             "particleSpeedLimit", "particle-speed-limit",
@@ -76,7 +89,38 @@ public final class ParamConfig {
             "personalConfidence", "personal-confidence",
             "swarmConfidence", "swarm-confidence",
             "particleInertia", "particle-inertia",
-            "constraintRate", "constraint_r"
+            "constraintR", "constraint_r"
     );
+
+    public static void checkConstraint(String paramName, Object value) {
+        if (ParamConfig.MIN.containsKey(paramName)) {
+            if (value instanceof Integer) {
+                int min = (int) ParamConfig.MIN.get(paramName);
+                if ((int) value < min) {
+                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
+                }
+            }
+            if (value instanceof Double) {
+                double min = (double) ParamConfig.MIN.get(paramName);
+                if ((double) value < min) {
+                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
+                }
+            }
+        }
+        if (ParamConfig.MAX.containsKey(paramName)) {
+            if (value instanceof Integer) {
+                int max = (int) ParamConfig.MAX.get(paramName);
+                if ((int) value > max) {
+                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
+                }
+            }
+            if (value instanceof Double) {
+                double max = (double) ParamConfig.MAX.get(paramName);
+                if ((double) value > max) {
+                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
+                }
+            }
+        }
+    }
 
 }

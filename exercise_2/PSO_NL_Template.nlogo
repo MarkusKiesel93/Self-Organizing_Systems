@@ -808,7 +808,7 @@ CHOOSER
 Constraint
 Constraint
 "Example" "Constraint 1" "Constraint 2" "Constraint 3" "Constraint 4" "Constraint 5" "Constraint 6" "Constraint 7" "Constraint 8" "Constraint 9" "Constraint 10"
-3
+5
 
 PLOT
 10
@@ -835,10 +835,10 @@ SLIDER
 148
 constraint_r
 constraint_r
+-1
 0
-100
-50.0
-0.1
+-0.65
+0.05
 1
 NIL
 HORIZONTAL

@@ -82,11 +82,11 @@ to initialize-topology
      if fitness_function = "Shubert function"
        [set val shubert_function pxcor pycor]
 
-     if fitness_function  = "Fitness function 2"
-       [set val fittness_function_2 pxcor pycor]
+     if fitness_function  = "Booth's function"
+       [set val booths_function pxcor pycor]
 
-     if fitness_function = "Fitness function 3"
-       [set val fittness_function_3 pxcor pycor]
+     if fitness_function = "Schwefel function"
+       [set val schwefel_function pxcor pycor]
 
      if fitness_function = "Fitness function 4"
        [set val fittness_function_4 pxcor pycor]
@@ -113,10 +113,8 @@ to initialize-topology
      [
         ifelse (constraint_handling_method = "Penalty Method")
         [ set val val + constraint_r]
-        [ set val 0
-
-        ]
-         set pcolor 15
+        [ set val 0 ]
+        set pcolor 15
      ]
 
      [
@@ -316,14 +314,19 @@ to-report shubert_function [x y]
   report t1 * t2;
 end
 
-; dummy random fitness function to be implemented by students
-to-report fittness_function_2 [x y]
-  report random-normal 0 1;
+; Booth's function
+to-report booths_function [x y]
+  report (x + 2 * y - 7) ^ 2 + (2 * x + y - 5) ^ 2
 end
 
 ; dummy random fitness function to be implemented by students
-to-report fittness_function_3 [x y]
-  report random-normal 0 1;
+to-report schwefel_function [x y]
+  let a 418.9829
+  let s 0
+  set s s + (-1 * x * sin(sqrt(abs(x))))
+  set s s + (-1 * y * sin(sqrt(abs(y))))
+
+  report s + (a * 2);
 end
 
 ; dummy random fitness function to be implemented by students
@@ -359,7 +362,9 @@ end
 
 ; dummy random constrinat to be implemented by students
 to-report constrain_3 [x y]
-  report FALSE
+  ifelse (x > y + 20) or (x < y - 20)
+  [report TRUE]
+  [report FALSE]
 end
 
 ; dummy random constrinat to be implemented by students
@@ -367,9 +372,11 @@ to-report constrain_4 [x y]
   report FALSE
 end
 
-; dummy random constrinat to be implemented by students
+; constrinat c5(x, y): x > y
 to-report constrain_5 [x y]
-  report FALSE
+  ifelse x > y
+  [report TRUE]
+  [report FALSE]
 end
 
 ; dummy random constrinat to be implemented by students
@@ -498,8 +505,8 @@ GRAPHICS-WINDOW
 100
 -100
 100
-1
-1
+0
+0
 1
 ticks
 40.0
@@ -547,7 +554,7 @@ population-size
 population-size
 1
 100
-47.0
+14.0
 1
 1
 NIL
@@ -577,7 +584,7 @@ swarm-confidence
 swarm-confidence
 0
 2
-1.6
+1.3
 0.1
 1
 NIL
@@ -634,7 +641,7 @@ particle-speed-limit
 particle-speed-limit
 1
 20
-17.0
+10.0
 1
 1
 NIL
@@ -681,12 +688,12 @@ NIL
 CHOOSER
 10
 10
-155
+167
 55
 fitness_function
 fitness_function
-"Example function" "Shubert function" "Fitness function 2" "Fitness function 3" "Fitness function 4" "Fitness function 5" "Fitness function 6"
-1
+"Example function" "Shubert function" "Booth's function" "Schwefel function"
+3
 
 SWITCH
 10
@@ -695,7 +702,7 @@ SWITCH
 143
 Constraints
 Constraints
-1
+0
 1
 -1000
 
@@ -735,7 +742,7 @@ CHOOSER
 constraint_handling_method
 constraint_handling_method
 "Rejection Method" "Penalty Method"
-0
+1
 
 INPUTBOX
 320
@@ -801,7 +808,7 @@ CHOOSER
 Constraint
 Constraint
 "Example" "Constraint 1" "Constraint 2" "Constraint 3" "Constraint 4" "Constraint 5" "Constraint 6" "Constraint 7" "Constraint 8" "Constraint 9" "Constraint 10"
-1
+3
 
 PLOT
 10
@@ -828,17 +835,16 @@ SLIDER
 148
 constraint_r
 constraint_r
+-1
 0
-100
-50.0
-0.1
+-0.5
+0.5
 1
 NIL
 HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
-
 @#$#@#$#@
 default
 true

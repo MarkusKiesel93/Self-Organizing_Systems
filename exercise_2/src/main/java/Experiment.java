@@ -28,6 +28,7 @@ public class Experiment {
 
     // results
     private double fitness;
+    private double optimum;
     private int numberOfIterations;
 
     // other

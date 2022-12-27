@@ -32,6 +32,8 @@ public class OutputWriter {
         });
         line.append(experiment.getFitness());
         line.append(",");
+        line.append(experiment.getOptimum());
+        line.append(",");
         line.append(experiment.getNumberOfIterations());
         line.append("\n");
         fileWriter.write(line.toString());
@@ -44,7 +46,7 @@ public class OutputWriter {
             line.append(outputName);
             line.append(",");
         });
-        line.append("fitness,iterations_to_opt");
+        line.append("fitness,optimum,iterations_to_opt");
         line.append("\n");
         fileWriter.write(line.toString());
     }

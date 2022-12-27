@@ -80,6 +80,7 @@ public class Main {
     // NetLogo extract variables of interest
     private static void report(Experiment experiment) {
         experiment.setFitness((double) App.app().report("global-best-val"));
+        experiment.setOptimum((double) App.app().report("[val] of true-best-patch"));
         // todo: extract numberOfIterations until optimum reached
         experiment.setNumberOfIterations((int) (double) App.app().report("iterations"));
     }

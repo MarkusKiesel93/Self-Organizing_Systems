@@ -316,7 +316,7 @@ end
 
 ; Booth's function
 to-report booths_function [x y]
-  report (x + 2 * y - 7) ^ 2 + (2 * x + y - 5) ^ 2
+  report -1 * ((x + 2 * y - 7) ^ 2 + (2 * x + y - 5) ^ 2)
 end
 
 ; dummy random fitness function to be implemented by students
@@ -405,7 +405,7 @@ to-report constrain_9 [x y]
 end
 
 to-report constrain_10 [x y]
-  ifelse tan((x / max-x) * (y / max-y) * 180 * 4 / pi) < 1
+  ifelse tan((x / max-x) * (y / max-y) * 2 * 180 / pi ) < 1
   [report TRUE]
   [report FALSE]
 
@@ -487,8 +487,8 @@ end
 GRAPHICS-WINDOW
 675
 15
-1134
-475
+1135
+476
 -1
 -1
 2.25
@@ -554,7 +554,7 @@ population-size
 population-size
 1
 100
-14.0
+61.0
 1
 1
 NIL
@@ -630,7 +630,7 @@ CHOOSER
 trails-mode
 trails-mode
 "None" "Traces"
-1
+0
 
 SLIDER
 320
@@ -742,7 +742,7 @@ CHOOSER
 constraint_handling_method
 constraint_handling_method
 "Rejection Method" "Penalty Method"
-0
+1
 
 INPUTBOX
 320
@@ -837,7 +837,7 @@ constraint_r
 constraint_r
 -1
 0
--0.65
+-0.15
 0.05
 1
 NIL

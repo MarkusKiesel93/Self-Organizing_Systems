@@ -51,8 +51,6 @@ public class Main {
         OutputWriter outputWriter = new OutputWriter(outputFilePath);
         // multiple iterations by experiment
         for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
-            // setup for new iteration run
-            App.app().command("setup");
             for (Experiment experiment : allExperiments) {
                 System.out.println("Start Experiment " + experiment.getNumber() + " iteration " + i);
                 runExperiment(experiment);
@@ -65,11 +63,15 @@ public class Main {
 
     // steps performed for one experiment
     private static void runExperiment(Experiment experiment) {
-        repeat();
         setParams(experiment.getParameters());
+        setup();
         run();
         report(experiment);
         // todo: maybe use save command from NetLogo to store the experiment
+    }
+
+    private static void setup() {
+        App.app().command("setup");
     }
 
     // NetLogo run command

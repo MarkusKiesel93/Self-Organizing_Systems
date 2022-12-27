@@ -3,6 +3,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nlogo.core.prim.etc._userdirectory;
+
 public final class ExperimentSetup {
 
     @Getter
@@ -12,10 +14,10 @@ public final class ExperimentSetup {
     public static void setup() {
 
 
-        
-        for (boolean _useConstraints = true; _useConstraints == true; _useConstraints = false) {
-            final boolean useConstraints = _useConstraints;
-
+      
+        for (boolean useConstraints = true; useConstraints == true; useConstraints = false) {
+            //final boolean useConstraints = _useConstraints;
+            final boolean _useConstraints = useConstraints;
             constraintLoop:
             for (String constrainHandling : ParamConfig.CONSTRAINT_HANDLING_OPTIONS) {
                 for (String constrain : ParamConfig.CONSTRAINTS) {
@@ -26,7 +28,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .build()));
             
 
@@ -39,7 +41,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .particleSpeedLimit(2)
                             .build()));
             
@@ -48,7 +50,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .particleSpeedLimit(10)
                             .build()));
             
@@ -57,7 +59,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .particleSpeedLimit(25)
                             .build()));
             
@@ -71,7 +73,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .personalConfidence(0.1)
                             .swarmConfidence(2.0)
                             .build()));
@@ -81,7 +83,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .personalConfidence(0.8)
                             .swarmConfidence(1.3)
                             .build()));
@@ -91,7 +93,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .personalConfidence(1.0)
                             .swarmConfidence(1.0)
                             .build()));
@@ -101,7 +103,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .personalConfidence(2.0)
                             .swarmConfidence(0.1)
                             .build()));
@@ -116,7 +118,7 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .particleInertia(0.1)
                             .build()));
             
@@ -125,12 +127,12 @@ public final class ExperimentSetup {
                             .fitnessFunction(fitnessFunction)
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
-                            .useConstraints(useConstraints)
+                            .useConstraint(_useConstraints)
                             .particleInertia(2.0)
                             .build()));
                     
                     // only run once if constraints are turned off
-                    if (useConstraints == false) {
+                    if (_useConstraints == false) {
                         break constraintLoop;
                     }
                 }

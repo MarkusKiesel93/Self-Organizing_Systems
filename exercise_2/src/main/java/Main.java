@@ -1,6 +1,7 @@
 import org.nlogo.app.App;
 import org.nlogo.nvm.InstructionJ;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.*;
 // Netlogo Controlling API: https://github.com/NetLogo/NetLogo/wiki/Controlling-API
 public class Main {
 
-    private static final int ITERATIONS_BY_EXPERIMENT = 20;
+    private static final int ITERATIONS_BY_EXPERIMENT = 1;
     private static final int MAX_ITERATIONS_BY_RUN = 500;
     private static final String MODEL_FILE_NAME = "PSO_NL_Template.nlogo";
     public static final String OUTPUT_FILE_NAME = "results.csv";
@@ -42,7 +43,7 @@ public class Main {
     }
 
     // loop for all experiments
-    private static void runAllExperiments() {
+    private static void runAllExperiments() throws IOException {
         // setup experiments and output writer
         ExperimentSetup.setup();
         List<Experiment> allExperiments = ExperimentSetup.getExperiments();
@@ -59,6 +60,7 @@ public class Main {
                 outputWriter.writeExperiment(experiment, i);
             }
         }
+        outputWriter.close();
     }
 
     // steps performed for one experiment

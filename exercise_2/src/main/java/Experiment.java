@@ -2,12 +2,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.nlogo.app.App;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -19,7 +16,7 @@ public class Experiment {
 
     // parameters
     private String fitnessFunction;
-    private Boolean useConstraints;
+    private Boolean useConstraint;
     private String constraintHandlingMethod;
     private String constraint;
     private Integer particleSpeedLimit;
@@ -50,13 +47,13 @@ public class Experiment {
         this.parameters = new HashMap<>();
         Arrays.stream(getClass().getDeclaredFields()).forEach(field -> {
             String fieldName = field.getName();
-            if (ParamConfig.MAPPING.containsKey(fieldName)) {
+            if (ParamConfig.NETLOGO_MAPPING.containsKey(fieldName)) {
                 try {
                     if (field.get(this) == null) {
                         field.set(this, ParamConfig.DEFAULTS.get(fieldName));
                     }
                     ParamConfig.checkConstraint(fieldName, field.get(this));
-                    this.parameters.put(ParamConfig.MAPPING.get(field.getName()), field.get(this));
+                    this.parameters.put(ParamConfig.NETLOGO_MAPPING.get(field.getName()), field.get(this));
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
                     ex.printStackTrace();
                 }

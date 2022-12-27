@@ -30,7 +30,7 @@ public final class ExperimentSetup {
 
     // handles setting the experiment number for each experiment
     private static void addExperiment(Experiment experiment) {
-        experiment.setNumber(++numberOfExperiments);
+        experiment.setNumber(numberOfExperiments++);
         experiments.add(experiment);
     }
 

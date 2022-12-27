@@ -405,7 +405,7 @@ to-report constrain_9 [x y]
 end
 
 to-report constrain_10 [x y]
-  ifelse   tan(x * y) < 1
+  ifelse tan((x / max-x) * (y / max-y) * 180 * 4 / pi) < 1
   [report TRUE]
   [report FALSE]
 
@@ -487,8 +487,8 @@ end
 GRAPHICS-WINDOW
 675
 15
-1135
-476
+1134
+475
 -1
 -1
 2.25
@@ -693,7 +693,7 @@ CHOOSER
 fitness_function
 fitness_function
 "Example function" "Shubert function" "Booth's function" "Schwefel function"
-3
+2
 
 SWITCH
 10
@@ -742,7 +742,7 @@ CHOOSER
 constraint_handling_method
 constraint_handling_method
 "Rejection Method" "Penalty Method"
-1
+0
 
 INPUTBOX
 320
@@ -808,7 +808,7 @@ CHOOSER
 Constraint
 Constraint
 "Example" "Constraint 1" "Constraint 2" "Constraint 3" "Constraint 4" "Constraint 5" "Constraint 6" "Constraint 7" "Constraint 8" "Constraint 9" "Constraint 10"
-5
+10
 
 PLOT
 10

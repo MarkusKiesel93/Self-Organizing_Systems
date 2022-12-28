@@ -45,17 +45,18 @@ public class Main {
     private static void runAllExperiments() throws IOException {
         // setup experiments and output writer
         ExperimentSetup.setup();
+        ExperimentSetup.saveAsCSV();
         ExperimentSetup.validate();
         List<Experiment> allExperiments = ExperimentSetup.getExperiments();
         String outputFilePath = Paths.get(OUTPUT_FILE_NAME).toAbsolutePath().toString();
-        OutputWriter outputWriter = new OutputWriter(outputFilePath);
+        OutputWriter outputWriter = new OutputWriter(outputFilePath, true);
         // multiple iterations by experiment
         for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
             for (Experiment experiment : allExperiments) {
                 System.out.println("Start Experiment " + experiment.getNumber() + " iteration " + i);
                 runExperiment(experiment);
                 System.out.println("Stop Experiment " + experiment.getNumber() + " iteration " + i);
-                outputWriter.writeExperiment(experiment, i);
+                outputWriter.writeExperimentWithResult(experiment, i);
             }
         }
         outputWriter.close();

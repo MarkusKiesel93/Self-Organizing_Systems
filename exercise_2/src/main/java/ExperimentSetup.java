@@ -1,5 +1,7 @@
 import lombok.Getter;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 
 public final class ExperimentSetup {
@@ -186,6 +188,16 @@ public final class ExperimentSetup {
             experimentViolations.put(experiment.getNumber(), constraintViolations);
         }
         experiments.add(experiment);
+    }
+
+    public static void saveAsCSV() throws IOException {
+        final String OUTPUT_FILE_NAME = "experiment_setup.csv";
+        String outputFilePath = Paths.get(OUTPUT_FILE_NAME).toAbsolutePath().toString();
+        OutputWriter outputWriter = new OutputWriter(outputFilePath, false);
+        for (Experiment experiment : experiments) {
+            outputWriter.writeExperiment(experiment);
+        }
+        outputWriter.close();
     }
 
 }

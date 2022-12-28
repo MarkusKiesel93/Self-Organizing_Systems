@@ -1,20 +1,18 @@
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.nlogo.core.prim.etc._userdirectory;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.*;
 
 public final class ExperimentSetup {
 
     @Getter
     private static List<Experiment> experiments = new ArrayList<>();
     private static int numberOfExperiments = 0;
+    private static Map<Integer, List<String>> experimentViolations = new LinkedHashMap<>();
 
     public static void setup() {
 
-
-      
         for (boolean useConstraints = true; useConstraints == true; useConstraints = false) {
             //final boolean useConstraints = _useConstraints;
             final boolean _useConstraints = useConstraints;
@@ -75,7 +73,7 @@ public final class ExperimentSetup {
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
                             .personalConfidence(0.1)
-                            .swarmConfidence(2.0)
+                            .swarmConfidence(1.0)
                             .build()));
             
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
@@ -85,7 +83,7 @@ public final class ExperimentSetup {
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
                             .personalConfidence(0.8)
-                            .swarmConfidence(1.3)
+                            .swarmConfidence(0.8)
                             .build()));
             
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
@@ -104,7 +102,7 @@ public final class ExperimentSetup {
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
-                            .personalConfidence(2.0)
+                            .personalConfidence(1.0)
                             .swarmConfidence(0.1)
                             .build()));
         
@@ -158,10 +156,48 @@ public final class ExperimentSetup {
 
     }
 
-    // handles setting the experiment number for each experiment
+    // validate all experiments
+    public static void validate() {
+        if (experimentViolations.size() == 0) {
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("There are constraint violations in ");
+        stringBuilder.append(experimentViolations.size());
+        stringBuilder.append(" Experiments.");
+        stringBuilder.append("\n");
+        experimentViolations.forEach((experimentNumber, violations) -> {
+            stringBuilder.append("\n");
+            stringBuilder.append("violations in Experiment ");
+            stringBuilder.append(experimentNumber);
+            stringBuilder.append(":\n");
+            violations.forEach(violation -> {
+                stringBuilder.append(violation);
+                stringBuilder.append("\n");
+            });
+
+        });
+        throw new RuntimeException(stringBuilder.toString());
+    }
+
+    // handles setting the experiment number for each experiment and validates Experiment
     private static void addExperiment(Experiment experiment) {
         experiment.setNumber(numberOfExperiments++);
+        List<String> constraintViolations = experiment.validate();
+        if (constraintViolations.size() > 0) {
+            experimentViolations.put(experiment.getNumber(), constraintViolations);
+        }
         experiments.add(experiment);
+    }
+
+    public static void saveAsCSV() throws IOException {
+        final String OUTPUT_FILE_NAME = "experiment_setup.csv";
+        String outputFilePath = Paths.get(OUTPUT_FILE_NAME).toAbsolutePath().toString();
+        OutputWriter outputWriter = new OutputWriter(outputFilePath, false);
+        for (Experiment experiment : experiments) {
+            outputWriter.writeExperiment(experiment);
+        }
+        outputWriter.close();
     }
 
 }

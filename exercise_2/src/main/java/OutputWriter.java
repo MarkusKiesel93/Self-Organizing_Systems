@@ -9,10 +9,14 @@ public class OutputWriter {
     private FileWriter fileWriter;
 
 
-    public OutputWriter (String filePath) throws IOException {
+    public OutputWriter (String filePath, Boolean withResults) throws IOException {
         file = new File(filePath);
         fileWriter = new FileWriter(file);
-        writeHeading();
+        if (withResults) {
+            writeHeadingWithResult();
+        } else {
+            writeHeading();
+        }
     }
 
     public void close() throws IOException {
@@ -20,22 +24,38 @@ public class OutputWriter {
         fileWriter.close();
     }
 
-    public void writeExperiment(Experiment experiment, int iteration) throws IOException {
+    private void addExperimentParams(StringBuilder stringBuilder, Experiment experiment) {
+        Map<String, Object> experimentParameters = experiment.getParameters();
+        ParamConfig.OUTPUT_MAPPING_SORTED.forEach((paramName, outputName) -> {
+            stringBuilder.append(experimentParameters.get(paramName));
+            stringBuilder.append(",");
+        });
+    }
+
+    public void writeExperiment(Experiment experiment) throws IOException {
+        StringBuilder line = new StringBuilder();
+        line.append(experiment.getNumber());
+        line.append(",");
+        addExperimentParams(line, experiment);
+        line.append("\n");
+        fileWriter.write(line.toString());
+    }
+
+    public void writeExperimentWithResult(Experiment experiment, int iteration) throws IOException {
         StringBuilder line = new StringBuilder();
         Map<String, Object> experimentParameters = experiment.getParameters();
         line.append(experiment.getNumber());
         line.append(",");
         line.append(iteration);
         line.append(",");
-        ParamConfig.OUTPUT_MAPPING_SORTED.forEach((paramName, outputName) -> {
-            line.append(experimentParameters.get(paramName));
-            line.append(",");
-        });
+        addExperimentParams(line, experiment);
         line.append(experiment.getFitness());
         line.append(",");
         line.append(experiment.getOptimum());
         line.append(",");
         line.append(experiment.getNumberOfIterations());
+        line.append(",");
+        line.append(experiment.isOptimumReached());
         line.append("\n");
         fileWriter.write(line.toString());
         fileWriter.flush();
@@ -43,12 +63,23 @@ public class OutputWriter {
 
     private void writeHeading() throws IOException {
         StringBuilder line = new StringBuilder();
+        line.append("number,");
+        ParamConfig.OUTPUT_MAPPING_SORTED.forEach((paramName, outputName) -> {
+            line.append(outputName);
+            line.append(",");
+        });
+        line.append("\n");
+        fileWriter.write(line.toString());
+    }
+
+    private void writeHeadingWithResult() throws IOException {
+        StringBuilder line = new StringBuilder();
         line.append("number,iteration,");
         ParamConfig.OUTPUT_MAPPING_SORTED.forEach((paramName, outputName) -> {
             line.append(outputName);
             line.append(",");
         });
-        line.append("fitness,optimum,iterations_to_opt");
+        line.append("fitness,optimum,iterations_to_opt,optimum_reached");
         line.append("\n");
         fileWriter.write(line.toString());
         fileWriter.flush();

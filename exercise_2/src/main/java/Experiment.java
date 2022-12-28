@@ -3,9 +3,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Data
@@ -30,7 +28,6 @@ public class Experiment {
     private double fitness;
     private double optimum;
     private int numberOfIterations;
-    private int numberOfIterationsUntilFitness;
     private boolean optimumReached;
 
     // other
@@ -55,13 +52,39 @@ public class Experiment {
                     if (field.get(this) == null) {
                         field.set(this, ParamConfig.DEFAULTS.get(fieldName));
                     }
-                    ParamConfig.checkConstraint(fieldName, field.get(this));
                     this.parameters.put(ParamConfig.NETLOGO_MAPPING.get(field.getName()), field.get(this));
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
                     ex.printStackTrace();
                 }
             }
         });
+    }
+
+    public List<String> validate() {
+        List<String> constraintViolations = new ArrayList<>();
+        // check String options
+        if (!ParamConfig.FITNESS_FUNCTIONS.contains(fitnessFunction)) {
+            constraintViolations.add("fitnessFunction value " + fitnessFunction +
+                    " not allowed use one of :" + ParamConfig.FITNESS_FUNCTIONS);
+        }
+        if (!ParamConfig.CONSTRAINT_HANDLING_OPTIONS.contains(constraintHandlingMethod)) {
+            constraintViolations.add("constraintHandlingMethod value " + constraintHandlingMethod +
+                    " not allowed use one of :" + ParamConfig.CONSTRAINT_HANDLING_OPTIONS);
+        }
+        if (!ParamConfig.CONSTRAINTS.contains(constraint)) {
+            constraintViolations.add("constraint value " + constraint +
+                    " not allowed use one of :" + ParamConfig.CONSTRAINTS);
+        }
+
+        // check numeric values
+        Arrays.stream(getClass().getDeclaredFields()).forEach(field -> {
+            try {
+                constraintViolations.addAll(ParamConfig.checkMinMaxConstraint(field.getName(), field.get(this)));
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                ex.printStackTrace();
+            }
+        });
+        return constraintViolations;
     }
 
 }

@@ -10,7 +10,7 @@ import java.util.*;
 // Netlogo Controlling API: https://github.com/NetLogo/NetLogo/wiki/Controlling-API
 public class Main {
 
-    private static final int ITERATIONS_BY_EXPERIMENT = 1;
+    private static final int ITERATIONS_BY_EXPERIMENT = 10;
     private static final int MAX_ITERATIONS_BY_RUN = 500;
     private static final String MODEL_FILE_NAME = "PSO_NL_Template.nlogo";
     public static final String OUTPUT_FILE_NAME = "results.csv";
@@ -45,36 +45,43 @@ public class Main {
     private static void runAllExperiments() throws IOException {
         // setup experiments and output writer
         ExperimentSetup.setup();
+        ExperimentSetup.saveAsCSV();
+        ExperimentSetup.validate();
         List<Experiment> allExperiments = ExperimentSetup.getExperiments();
         String outputFilePath = Paths.get(OUTPUT_FILE_NAME).toAbsolutePath().toString();
-        OutputWriter outputWriter = new OutputWriter(outputFilePath);
-        // multiple iterations by experiment
-        for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
-            for (Experiment experiment : allExperiments) {
-                System.out.println("Start Experiment " + experiment.getNumber() + " iteration " + i);
-                runExperiment(experiment);
-                System.out.println("Stop Experiment " + experiment.getNumber() + " iteration " + i);
-                outputWriter.writeExperiment(experiment, i);
-            }
+        OutputWriter outputWriter = new OutputWriter(outputFilePath, true);
+
+        // run the experiments
+        for (Experiment experiment : allExperiments) {
+            runExperiment(experiment, outputWriter);
         }
         outputWriter.close();
     }
 
     // steps performed for one experiment
-    private static void runExperiment(Experiment experiment) {
+    private static void runExperiment(Experiment experiment, OutputWriter outputWriter) throws IOException {
         setParams(experiment.getParameters());
-        setup();
-        run(experiment);
-        report(experiment);
-        // todo: maybe use save command from NetLogo to store the experiment
+        // multiple iterations by experiment
+        for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
+            System.out.println("Experiment " + experiment.getNumber() + " iteration " + i);
+            setup();
+            run();
+            report(experiment);
+            // todo: maybe use save command from NetLogo to store the experiment
+            outputWriter.writeExperimentWithResult(experiment, i);
+        }
     }
 
     private static void setup() {
         App.app().command("setup");
     }
 
+    private static void run() {
+        App.app().command("repeat " + MAX_ITERATIONS_BY_RUN + " [ iterate ]");
+    }
+
     // NetLogo run command
-    private static void run(Experiment experiment) {
+    private static void runStepByStep(Experiment experiment) {
         final double optimum = (double) App.app().report("[val] of true-best-patch");
         double currentBestVal = -1;
         int iterationOfCurrentBestVal = -1;
@@ -91,7 +98,7 @@ public class Main {
             }
 
         }
-        experiment.setNumberOfIterationsUntilFitness(iterationOfCurrentBestVal);
+        experiment.setNumberOfIterations(iterationOfCurrentBestVal);
         if (experiment.isOptimumReached()) {
             System.out.printf("Optimum of '%f' was reached after %d iterations%n", currentBestVal, iterationOfCurrentBestVal);
 
@@ -104,8 +111,10 @@ public class Main {
     private static void report(Experiment experiment) {
         experiment.setFitness((double) App.app().report("global-best-val"));
         experiment.setOptimum((double) App.app().report("[val] of true-best-patch"));
-        // todo: extract numberOfIterations until optimum reached
-        experiment.setNumberOfIterations((int) (double) App.app().report("iterations"));
+        experiment.setNumberOfIterations((int) (double) App.app().report("iterations-to-opt"));
+        if (experiment.getFitness() == experiment.getOptimum()) {
+            experiment.setOptimumReached(true);
+        }
     }
 
     // NetLogo repeat commands

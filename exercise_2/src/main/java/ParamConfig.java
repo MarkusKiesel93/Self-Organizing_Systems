@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,11 @@ public final class ParamConfig {
     public static final String CONSTRAINT_10 = "Constraint 10";
 
     public static final int POPULATION_SIZE_MIN = 1;
-    public static final int POPULATION_SIZE_DEFAULT = 14;
+    public static final int POPULATION_SIZE_DEFAULT = 13;
     public static final int POPULATION_SIZE_MAX = 100;
 
     public static final int PARTICLE_SPEED_LIMIT_MIN = 1;
-    public static final int PARTICLE_SPEED_LIMIT_DEFAULT = 10;
+    public static final int PARTICLE_SPEED_LIMIT_DEFAULT = 13;
     public static final int PARTICLE_SPEED_LIMIT_MAX = 20;
 
     public static final double PARTICLE_INERTIA_MIN = 0.0;
@@ -32,11 +33,11 @@ public final class ParamConfig {
     public static final double PERSONAL_CONFIDENCE_MAX = 2.0;
 
     public static final double SWARM_CONFIDENCE_MIN = 0.0;
-    public static final double SWARM_CONFIDENCE_DEFAULT = 1.3;
+    public static final double SWARM_CONFIDENCE_DEFAULT = 1.6;
     public static final double SWARM_CONFIDENCE_MAX = 2.0;
 
     public static final double CONSTRAINT_R_MIN = -1.0;
-    public static final double CONSTRAINT_R_DEFAULT = -0.65;
+    public static final double CONSTRAINT_R_DEFAULT = -0.15;
     public static final double CONSTRAINT_R_MAX = 0.0;
 
     public static final List<String> FITNESS_FUNCTIONS = List.of(
@@ -107,18 +108,19 @@ public final class ParamConfig {
         OUTPUT_MAPPING_SORTED.put("constraint_r", "constraint_r");
     }
 
-    public static void checkConstraint(String paramName, Object value) {
+    public static List<String> checkMinMaxConstraint(String paramName, Object value) {
+        List<String> constraintViolations = new ArrayList<>();
         if (ParamConfig.MIN.containsKey(paramName)) {
             if (value instanceof Integer) {
                 int min = (int) ParamConfig.MIN.get(paramName);
                 if ((int) value < min) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
+                    constraintViolations.add(paramName + " value " + value + " not allowed min: " + min);
                 }
             }
             if (value instanceof Double) {
                 double min = (double) ParamConfig.MIN.get(paramName);
                 if ((double) value < min) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
+                    constraintViolations.add(paramName + " value " + value + " not allowed min: " + min);
                 }
             }
         }
@@ -126,16 +128,17 @@ public final class ParamConfig {
             if (value instanceof Integer) {
                 int max = (int) ParamConfig.MAX.get(paramName);
                 if ((int) value > max) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
+                    constraintViolations.add(paramName + " value " + value + " not allowed max: " + max);
                 }
             }
             if (value instanceof Double) {
                 double max = (double) ParamConfig.MAX.get(paramName);
                 if ((double) value > max) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
+                    constraintViolations.add(paramName + " value " + value + " not allowed max: " + max);
                 }
             }
         }
+        return constraintViolations;
     }
 
 }

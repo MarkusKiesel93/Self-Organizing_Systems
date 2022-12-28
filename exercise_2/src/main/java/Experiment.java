@@ -30,6 +30,8 @@ public class Experiment {
     private double fitness;
     private double optimum;
     private int numberOfIterations;
+    private int numberOfIterationsUntilFitness;
+    private boolean optimumReached;
 
     // other
     private int number; // number of experiment

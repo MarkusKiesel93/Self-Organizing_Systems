@@ -1,5 +1,4 @@
 import org.nlogo.app.App;
-import org.nlogo.nvm.InstructionJ;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -65,7 +64,7 @@ public class Main {
     private static void runExperiment(Experiment experiment) {
         setParams(experiment.getParameters());
         setup();
-        run();
+        run(experiment);
         report(experiment);
         // todo: maybe use save command from NetLogo to store the experiment
     }
@@ -75,8 +74,31 @@ public class Main {
     }
 
     // NetLogo run command
-    private static void run() {
-        App.app().command("repeat " + MAX_ITERATIONS_BY_RUN + " [ iterate ]");
+    private static void run(Experiment experiment) {
+        final double optimum = (double) App.app().report("[val] of true-best-patch");
+        double currentBestVal = -1;
+        int iterationOfCurrentBestVal = -1;
+        for (int i = 1; i <= MAX_ITERATIONS_BY_RUN; i++) {
+            App.app().command("iterate");
+            double bestVal = (double) App.app().report("global-best-val");
+            if (bestVal > currentBestVal) {
+                currentBestVal = bestVal;
+                iterationOfCurrentBestVal = i;
+            }
+            if (currentBestVal == optimum) {
+                System.out.printf("Optimum reached after %d iterations!%n", i);
+                experiment.setOptimumReached(true);
+                break;
+            }
+
+        }
+        experiment.setNumberOfIterationsUntilFitness(iterationOfCurrentBestVal);
+        if (experiment.isOptimumReached()) {
+            System.out.printf("Optimum of '%f' was reached after %d iterations", currentBestVal, iterationOfCurrentBestVal);
+
+        }else {
+            System.out.printf("Optimum of '%f' was NOT reached, best value was '%f' after %d iterations", optimum, currentBestVal, iterationOfCurrentBestVal);
+        }
     }
 
     // NetLogo extract variables of interest

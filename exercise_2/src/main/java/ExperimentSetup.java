@@ -15,129 +15,141 @@ public final class ExperimentSetup {
 
     public static void setup() {
 
+        for (int popSize = 5; popSize < 80; popSize += 20) {
+                final int _populationSize = popSize;
+                for (boolean useConstraints = true; useConstraints == true; useConstraints = false) {
+                //final boolean useConstraints = _useConstraints;
+                final boolean _useConstraints = useConstraints;
+                        constraintLoop:
+                        for (String constrainHandling : ParamConfig.CONSTRAINT_HANDLING_OPTIONS) {
+                                for (String constrain : ParamConfig.CONSTRAINTS) {
 
-        for (boolean useConstraints = true; useConstraints == true; useConstraints = false) {
-            //final boolean useConstraints = _useConstraints;
-            final boolean _useConstraints = useConstraints;
-            constraintLoop:
-            for (String constrainHandling : ParamConfig.CONSTRAINT_HANDLING_OPTIONS) {
-                for (String constrain : ParamConfig.CONSTRAINTS) {
-
-                    // Baseline for the tests to compare against
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .build()));
-
-
-                    // Hypothesis:
-                    // A small speed limit decreases convergence rate but increases
-                    // success changes for convergence
-
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .particleSpeedLimit(2)
-                                    .build()));
-
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .particleSpeedLimit(10)
-                                    .build()));
-
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .particleSpeedLimit(20)
-                                    .build()));
-
-                    // Hypothesis:
-                    // A weaker swarm coupling decreases convergence speed, because less individuals 
-                    // are in a good area, but also decreases the likelihood of getting caught in 
-                    // a local minima
-
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .personalConfidence(0.1)
-                            .swarmConfidence(1.0)
-                            .build()));
-            
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .personalConfidence(0.8)
-                            .swarmConfidence(0.8)
-                            .build()));
-
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .personalConfidence(1.0)
-                                    .swarmConfidence(1.0)
-                                    .build()));
-
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .personalConfidence(1.0)
-                            .swarmConfidence(0.1)
-                            .build()));
+                                        // Baseline for the tests to compare against
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .populationSize(_populationSize)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .build()));
 
 
-                    // Hypothesis:
-                    // A high paricle inertia allows the swarm to overcome
-                    // a local minima by overshooting the target
+                                        // Hypothesis:
+                                        // A small speed limit decreases convergence rate but increases
+                                        // success changes for convergence
 
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .particleInertia(0.1)
-                                    .build()));
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .populationSize(_populationSize)
+                                                        .particleSpeedLimit(2)
+                                                        .build()));
 
-                    ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                            addExperiment(Experiment.builder()
-                                    .fitnessFunction(fitnessFunction)
-                                    .constraint(constrain)
-                                    .constraintHandlingMethod(constrainHandling)
-                                    .useConstraint(_useConstraints)
-                                    .particleInertia(1.0)
-                                    .build()));
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .populationSize(_populationSize)
+                                                        .particleSpeedLimit(10)
+                                                        .build()));
 
-                    // only run once if constraints are turned off
-                    if (_useConstraints == false) {
-                        break constraintLoop;
-                    }
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .populationSize(_populationSize)
+                                                        .particleSpeedLimit(20)
+                                                        .build()));
+
+                                        // Hypothesis:
+                                        // A weaker swarm coupling decreases convergence speed, because less individuals 
+                                        // are in a good area, but also decreases the likelihood of getting caught in 
+                                        // a local minima
+
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                        addExperiment(Experiment.builder()
+                                                .fitnessFunction(fitnessFunction)
+                                                .constraint(constrain)
+                                                .constraintHandlingMethod(constrainHandling)
+                                                .useConstraint(_useConstraints)
+                                                .populationSize(_populationSize)
+                                                .personalConfidence(0.1)
+                                                .swarmConfidence(1.0)
+                                                .build()));
+                                
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                        addExperiment(Experiment.builder()
+                                                .fitnessFunction(fitnessFunction)
+                                                .constraint(constrain)
+                                                .constraintHandlingMethod(constrainHandling)
+                                                .useConstraint(_useConstraints)
+                                                .populationSize(_populationSize)
+                                                .personalConfidence(0.8)
+                                                .swarmConfidence(0.8)
+                                                .build()));
+
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .populationSize(_populationSize)
+                                                        .personalConfidence(1.0)
+                                                        .swarmConfidence(1.0)
+                                                        .build()));
+
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                        addExperiment(Experiment.builder()
+                                                .fitnessFunction(fitnessFunction)
+                                                .constraint(constrain)
+                                                .constraintHandlingMethod(constrainHandling)
+                                                .useConstraint(_useConstraints)
+                                                .populationSize(_populationSize)
+                                                .personalConfidence(1.0)
+                                                .swarmConfidence(0.1)
+                                                .build()));
+
+
+                                        // Hypothesis:
+                                        // A high paricle inertia allows the swarm to overcome
+                                        // a local minima by overshooting the target
+
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .populationSize(_populationSize)
+                                                        .particleInertia(0.1)
+                                                        .build()));
+
+                                        ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
+                                                addExperiment(Experiment.builder()
+                                                        .fitnessFunction(fitnessFunction)
+                                                        .constraint(constrain)
+                                                        .constraintHandlingMethod(constrainHandling)
+                                                        .useConstraint(_useConstraints)
+                                                        .populationSize(_populationSize)
+                                                        .particleInertia(1.0)
+                                                        .build()));
+
+                                        // only run once if constraints are turned off
+                                        if (_useConstraints == false) {
+                                                break constraintLoop;
+                                        }
+                                }
+                        }
                 }
-            }
         }
         // Boundary conditions
         // Penalty Method

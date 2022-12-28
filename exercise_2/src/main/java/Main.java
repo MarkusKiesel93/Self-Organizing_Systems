@@ -1,5 +1,4 @@
 import org.nlogo.app.App;
-import org.nlogo.nvm.InstructionJ;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -46,6 +45,7 @@ public class Main {
     private static void runAllExperiments() throws IOException {
         // setup experiments and output writer
         ExperimentSetup.setup();
+        ExperimentSetup.validate();
         List<Experiment> allExperiments = ExperimentSetup.getExperiments();
         String outputFilePath = Paths.get(OUTPUT_FILE_NAME).toAbsolutePath().toString();
         OutputWriter outputWriter = new OutputWriter(outputFilePath);

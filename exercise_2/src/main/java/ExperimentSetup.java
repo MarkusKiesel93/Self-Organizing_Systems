@@ -1,20 +1,16 @@
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.nlogo.core.prim.etc._userdirectory;
+import java.util.*;
 
 public final class ExperimentSetup {
 
     @Getter
     private static List<Experiment> experiments = new ArrayList<>();
     private static int numberOfExperiments = 0;
+    private static Map<Integer, List<String>> experimentViolations = new LinkedHashMap<>();
 
     public static void setup() {
 
-
-      
         for (boolean useConstraints = true; useConstraints == true; useConstraints = false) {
             //final boolean useConstraints = _useConstraints;
             final boolean _useConstraints = useConstraints;
@@ -158,9 +154,37 @@ public final class ExperimentSetup {
 
     }
 
-    // handles setting the experiment number for each experiment
+    // validate all experiments
+    public static void validate() {
+        if (experimentViolations.size() == 0) {
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("There are constraint violations in ");
+        stringBuilder.append(experimentViolations.size());
+        stringBuilder.append(" Experiments.");
+        stringBuilder.append("\n");
+        experimentViolations.forEach((experimentNumber, violations) -> {
+            stringBuilder.append("\n");
+            stringBuilder.append("violations in Experiment ");
+            stringBuilder.append(experimentNumber);
+            stringBuilder.append(":\n");
+            violations.forEach(violation -> {
+                stringBuilder.append(violation);
+                stringBuilder.append("\n");
+            });
+
+        });
+        throw new RuntimeException(stringBuilder.toString());
+    }
+
+    // handles setting the experiment number for each experiment and validates Experiment
     private static void addExperiment(Experiment experiment) {
         experiment.setNumber(numberOfExperiments++);
+        List<String> constraintViolations = experiment.validate();
+        if (constraintViolations.size() > 0) {
+            experimentViolations.put(experiment.getNumber(), constraintViolations);
+        }
         experiments.add(experiment);
     }
 

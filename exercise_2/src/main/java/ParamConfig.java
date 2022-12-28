@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,18 +108,19 @@ public final class ParamConfig {
         OUTPUT_MAPPING_SORTED.put("constraint_r", "constraint_r");
     }
 
-    public static void checkConstraint(String paramName, Object value) {
+    public static List<String> checkMinMaxConstraint(String paramName, Object value) {
+        List<String> constraintViolations = new ArrayList<>();
         if (ParamConfig.MIN.containsKey(paramName)) {
             if (value instanceof Integer) {
                 int min = (int) ParamConfig.MIN.get(paramName);
                 if ((int) value < min) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
+                    constraintViolations.add(paramName + " value " + value + " not allowed min: " + min);
                 }
             }
             if (value instanceof Double) {
                 double min = (double) ParamConfig.MIN.get(paramName);
                 if ((double) value < min) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed min: " + min);
+                    constraintViolations.add(paramName + " value " + value + " not allowed min: " + min);
                 }
             }
         }
@@ -126,16 +128,17 @@ public final class ParamConfig {
             if (value instanceof Integer) {
                 int max = (int) ParamConfig.MAX.get(paramName);
                 if ((int) value > max) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
+                    constraintViolations.add(paramName + " value " + value + " not allowed max: " + max);
                 }
             }
             if (value instanceof Double) {
                 double max = (double) ParamConfig.MAX.get(paramName);
                 if ((double) value > max) {
-                    throw new RuntimeException(paramName + " value " + value + " not allowed max: " + max);
+                    constraintViolations.add(paramName + " value " + value + " not allowed max: " + max);
                 }
             }
         }
+        return constraintViolations;
     }
 
 }

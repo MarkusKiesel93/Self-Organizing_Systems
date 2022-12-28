@@ -54,6 +54,7 @@ globals
 to setup
   clear-all
   set iterations 0;
+  set iterations-to-opt 0
   initialize-topology
 
   initialize-agents

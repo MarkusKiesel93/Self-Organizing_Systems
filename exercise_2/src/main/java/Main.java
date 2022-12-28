@@ -10,7 +10,7 @@ import java.util.*;
 // Netlogo Controlling API: https://github.com/NetLogo/NetLogo/wiki/Controlling-API
 public class Main {
 
-    private static final int ITERATIONS_BY_EXPERIMENT = 1;
+    private static final int ITERATIONS_BY_EXPERIMENT = 10;
     private static final int MAX_ITERATIONS_BY_RUN = 500;
     private static final String MODEL_FILE_NAME = "PSO_NL_Template.nlogo";
     public static final String OUTPUT_FILE_NAME = "results.csv";
@@ -50,25 +50,26 @@ public class Main {
         List<Experiment> allExperiments = ExperimentSetup.getExperiments();
         String outputFilePath = Paths.get(OUTPUT_FILE_NAME).toAbsolutePath().toString();
         OutputWriter outputWriter = new OutputWriter(outputFilePath, true);
-        // multiple iterations by experiment
-        for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
-            for (Experiment experiment : allExperiments) {
-                System.out.println("Start Experiment " + experiment.getNumber() + " iteration " + i);
-                runExperiment(experiment);
-                System.out.println("Stop Experiment " + experiment.getNumber() + " iteration " + i);
-                outputWriter.writeExperimentWithResult(experiment, i);
-            }
+
+        // run the experiments
+        for (Experiment experiment : allExperiments) {
+            runExperiment(experiment, outputWriter);
         }
         outputWriter.close();
     }
 
     // steps performed for one experiment
-    private static void runExperiment(Experiment experiment) {
+    private static void runExperiment(Experiment experiment, OutputWriter outputWriter) throws IOException {
         setParams(experiment.getParameters());
-        setup();
-        run();
-        report(experiment);
-        // todo: maybe use save command from NetLogo to store the experiment
+        // multiple iterations by experiment
+        for (int i = 0; i < ITERATIONS_BY_EXPERIMENT; i++) {
+            System.out.println("Experiment " + experiment.getNumber() + " iteration " + i);
+            setup();
+            run();
+            report(experiment);
+            // todo: maybe use save command from NetLogo to store the experiment
+            outputWriter.writeExperimentWithResult(experiment, i);
+        }
     }
 
     private static void setup() {

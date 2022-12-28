@@ -45,6 +45,7 @@ globals
   max-y;           ; maximum y coordinate
 
   iterations       ; counter for iterations
+  iterations-to-opt; iteration when optimum reached
 ]
 
 ; The function setup initilizes the search landscape and the agents
@@ -289,6 +290,7 @@ to update-global-best
       set global-best-val personal-best-val
       set global-best-x personal-best-x
       set global-best-y personal-best-y
+      set iterations-to-opt iterations
     ]
   ]
 end

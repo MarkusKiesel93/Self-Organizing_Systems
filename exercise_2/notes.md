@@ -22,9 +22,5 @@ Implemetierung einer eigenen Penalty-Funktion für Constraint-handeling und verg
 
 # TODO:
 
-- Find step at which maximum was reached
-- Read out number of iterations
-- Experimental Loop with setup + repeats
-- Export to CSV
-- Fix constraint 10
-- Create Experiments
+- maybe headless
+- show disadvantage of penalty method (optimum can be in restricted area)

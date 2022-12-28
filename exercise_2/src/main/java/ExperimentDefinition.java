@@ -15,6 +15,5 @@ public class ExperimentDefinition {
     private Double personalConfidence;
     private Double swarmConfidence;
     private Double particleInertia;
-    private Double constraintR;
 
 }

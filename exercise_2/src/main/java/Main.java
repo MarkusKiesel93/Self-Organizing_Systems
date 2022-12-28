@@ -14,6 +14,7 @@ import java.util.*;
 public class Main {
 
     private static final int ITERATIONS_BY_EXPERIMENT = 10;
+    private static final int ITERATIONS = 10;
     private static final int MAX_ITERATIONS_BY_RUN = 500;
     private static final String MODEL_FILE_NAME = "PSO_NL_Template.nlogo";
     public static final String OUTPUT_FILE_NAME = "results";
@@ -53,7 +54,7 @@ public class Main {
 
         final List<Setup> setups = ExperimentSetup.createSetups();
         final List<ExperimentDefinition> experiments = ExperimentSetup.createExperiments();
-        int iterationsPerSetup = 1;
+        if (true) return;
 
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM_HH-mm-ss"));
         String outputFilePath = Paths.get(OUTPUT_FILE_NAME + dateTime + ".csv").toAbsolutePath().toString();
@@ -61,8 +62,13 @@ public class Main {
 
         System.out.printf("Started: %s%n", LocalDateTime.now().format(DATE_TIME_FORMATTER));
 
-        for (int i = 1; i <= iterationsPerSetup; i++) {
+        for (int i = 1; i <= ITERATIONS; i++) {
             for (Setup setup : setups) {
+                if (setup.getFitnessFunction().equals(ParamConfig.FITNESS_FUNCTION_SCHWEFEL)) {
+                    App.app().command("resize-world -512 512 -512 512");
+                } else {
+                    App.app().command("resize-world -100 100 -100 100");
+                }
                 App.app().command(
                         setCommand(ParamConfig.NETLOGO_MAPPING.get("fitnessFunction"), setup.getFitnessFunction()));
                 App.app().command(
@@ -71,6 +77,9 @@ public class Main {
                     App.app().command(setCommand(ParamConfig.NETLOGO_MAPPING.get("constraintHandlingMethod"),
                             setup.getConstraintHandlingMethod()));
                     App.app().command(setCommand(ParamConfig.NETLOGO_MAPPING.get("constraint"), setup.getConstraint()));
+                    App.app().command(
+                            setCommand(ParamConfig.NETLOGO_MAPPING.get("constraintR"), setup.getConstraintR()));
+
                 }
                 App.app().command(
                         setCommand(ParamConfig.NETLOGO_MAPPING.get("populationSize"), setup.getPopulationSize()));
@@ -83,9 +92,9 @@ public class Main {
                             .fitnessFunction(setup.getFitnessFunction())
                             .useConstraint(setup.getUseConstraint())
                             .constraintHandlingMethod(
-                                    setup.getUseConstraint() ? setup.getConstraintHandlingMethod() : "-")
-                            .constraint(setup.getUseConstraint() ? setup.getConstraint() : "-")
-                            .constraintR(experimentDefinition.getConstraintR())
+                                    setup.getUseConstraint() ? setup.getConstraintHandlingMethod() : "")
+                            .constraint(setup.getUseConstraint() ? setup.getConstraint() : "")
+                            .constraintR(setup.getConstraintR())
                             .populationSize(setup.getPopulationSize())
                             .particleInertia(experimentDefinition.getParticleInertia())
                             .personalConfidence(experimentDefinition.getPersonalConfidence())
@@ -95,7 +104,7 @@ public class Main {
                     repeat();
                     System.out.printf("%s: Start Experiment %d/%d, setup %d/%d, iteration %d/%d%n",
                             LocalDateTime.now().format(DATE_TIME_FORMATTER), experiment.getNumber(),
-                            experiments.size(), setup.getNumber(), setups.size(), i, ITERATIONS_BY_EXPERIMENT);
+                            experiments.size(), setup.getNumber(), setups.size(), i, ITERATIONS);
                     setParams(experiment.getParameters());
                     run();
                     report(experiment);
@@ -104,7 +113,7 @@ public class Main {
                             "%s: Finished Experiment %d/%d, setup %d/%d, iteration %d/%d: Optimum of '%f' was %s " +
                                     "after %d iterations%n",
                             LocalDateTime.now().format(DATE_TIME_FORMATTER), experiment.getNumber(),
-                            experiments.size(), setup.getNumber(), setups.size(), i, ITERATIONS_BY_EXPERIMENT,
+                            experiments.size(), setup.getNumber(), setups.size(), i, ITERATIONS,
                             experiment.getOptimum(),
                             experiment.isOptimumReached() ? "reached" :
                                     "NOT reached, best value was '" + experiment.getFitness() + "'",

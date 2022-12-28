@@ -15,5 +15,6 @@ public class Setup {
     private String constraintHandlingMethod;
     private String constraint;
     private Integer populationSize;
+    private Double constraintR;
 
 }

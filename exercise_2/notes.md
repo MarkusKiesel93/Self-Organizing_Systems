@@ -23,3 +23,14 @@ Implemetierung einer eigenen Penalty-Funktion für Constraint-handeling und verg
 # TODO:
 
 - show disadvantage of penalty method (optimum can be in restricted area)
+
+# Visualization
+
+- Open to discussion
+
+# Hypothesis
+
+- A small speed limit decreases convergence rate but increases success changes for convergence
+- A weaker swarm coupling decreases convergence speed, because less individuals are in a good area, but also decreases the likelihood of getting caught in local minima
+- A high paricle inertia allows the swarm to overcome a local minima by overshooting the target
+- The penalty method allows for the swarm to tunnel through forbidden areas and therefore better find optima at the constrain boundaries

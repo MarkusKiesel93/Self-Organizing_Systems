@@ -86,7 +86,6 @@ public class Main {
                 iterationOfCurrentBestVal = i;
             }
             if (currentBestVal == optimum) {
-                System.out.printf("Optimum reached after %d iterations!%n", i);
                 experiment.setOptimumReached(true);
                 break;
             }
@@ -94,10 +93,10 @@ public class Main {
         }
         experiment.setNumberOfIterationsUntilFitness(iterationOfCurrentBestVal);
         if (experiment.isOptimumReached()) {
-            System.out.printf("Optimum of '%f' was reached after %d iterations", currentBestVal, iterationOfCurrentBestVal);
+            System.out.printf("Optimum of '%f' was reached after %d iterations%n", currentBestVal, iterationOfCurrentBestVal);
 
         }else {
-            System.out.printf("Optimum of '%f' was NOT reached, best value was '%f' after %d iterations", optimum, currentBestVal, iterationOfCurrentBestVal);
+            System.out.printf("Optimum of '%f' was NOT reached, best value was '%f' after %d iterations%n", optimum, currentBestVal, iterationOfCurrentBestVal);
         }
     }
 

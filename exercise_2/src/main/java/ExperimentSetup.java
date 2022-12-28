@@ -60,7 +60,7 @@ public final class ExperimentSetup {
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
-                            .particleSpeedLimit(25)
+                            .particleSpeedLimit(20)
                             .build()));
             
                     // Hypothesis:
@@ -128,7 +128,7 @@ public final class ExperimentSetup {
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
-                            .particleInertia(2.0)
+                            .particleInertia(1.0)
                             .build()));
                     
                     // only run once if constraints are turned off

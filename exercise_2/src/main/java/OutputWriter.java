@@ -25,7 +25,7 @@ public class OutputWriter {
     }
 
     private void addExperimentParams(StringBuilder stringBuilder, Experiment experiment) {
-        Map<String, Object> experimentParameters = experiment.getParameters();
+        Map<String, Object> experimentParameters = experiment.getOutputParameters();
         ParamConfig.OUTPUT_MAPPING_SORTED.forEach((paramName, outputName) -> {
             stringBuilder.append(experimentParameters.get(paramName));
             stringBuilder.append(",");
@@ -43,7 +43,7 @@ public class OutputWriter {
 
     public void writeExperimentWithResult(Experiment experiment, int iteration) throws IOException {
         StringBuilder line = new StringBuilder();
-        Map<String, Object> experimentParameters = experiment.getParameters();
+        Map<String, Object> experimentParameters = experiment.getOutputParameters();
         line.append(experiment.getNumber());
         line.append(",");
         line.append(iteration);
@@ -56,6 +56,8 @@ public class OutputWriter {
         line.append(experiment.getNumberOfIterations());
         line.append(",");
         line.append(experiment.isOptimumReached());
+        line.append(",");
+        line.append(experiment.getNumberOfIterationsUntilFitness());
         line.append("\n");
         fileWriter.write(line.toString());
         fileWriter.flush();
@@ -79,7 +81,7 @@ public class OutputWriter {
             line.append(outputName);
             line.append(",");
         });
-        line.append("fitness,optimum,iterations_to_opt,optimum_reached");
+        line.append("fitness,optimum,iterations,optimum_reached,iterations_to_opt");
         line.append("\n");
         fileWriter.write(line.toString());
         fileWriter.flush();

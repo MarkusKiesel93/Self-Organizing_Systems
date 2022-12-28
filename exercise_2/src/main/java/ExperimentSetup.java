@@ -3,6 +3,8 @@ import lombok.Getter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ExperimentSetup {
 
@@ -13,6 +15,7 @@ public final class ExperimentSetup {
 
     public static void setup() {
 
+
         for (boolean useConstraints = true; useConstraints == true; useConstraints = false) {
             //final boolean useConstraints = _useConstraints;
             final boolean _useConstraints = useConstraints;
@@ -22,50 +25,50 @@ public final class ExperimentSetup {
 
                     // Baseline for the tests to compare against
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .build()));
-            
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .build()));
+
 
                     // Hypothesis:
                     // A small speed limit decreases convergence rate but increases
                     // success changes for convergence
-                
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .particleSpeedLimit(2)
-                            .build()));
-            
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .particleSpeedLimit(2)
+                                    .build()));
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .particleSpeedLimit(10)
-                            .build()));
-            
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .particleSpeedLimit(10)
+                                    .build()));
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .particleSpeedLimit(20)
-                            .build()));
-            
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .particleSpeedLimit(20)
+                                    .build()));
+
                     // Hypothesis:
                     // A weaker swarm coupling decreases convergence speed, because less individuals 
                     // are in a good area, but also decreases the likelihood of getting caught in 
                     // a local minima
-            
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
                     addExperiment(Experiment.builder()
                             .fitnessFunction(fitnessFunction)
@@ -85,17 +88,17 @@ public final class ExperimentSetup {
                             .personalConfidence(0.8)
                             .swarmConfidence(0.8)
                             .build()));
-            
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .personalConfidence(1.0)
-                            .swarmConfidence(1.0)
-                            .build()));
-            
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .personalConfidence(1.0)
+                                    .swarmConfidence(1.0)
+                                    .build()));
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
                     addExperiment(Experiment.builder()
                             .fitnessFunction(fitnessFunction)
@@ -105,30 +108,30 @@ public final class ExperimentSetup {
                             .personalConfidence(1.0)
                             .swarmConfidence(0.1)
                             .build()));
-        
+
 
                     // Hypothesis:
                     // A high paricle inertia allows the swarm to overcome
                     // a local minima by overshooting the target
-            
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .particleInertia(0.1)
-                            .build()));
-            
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .particleInertia(0.1)
+                                    .build()));
+
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
-                    addExperiment(Experiment.builder()
-                            .fitnessFunction(fitnessFunction)
-                            .constraint(constrain)
-                            .constraintHandlingMethod(constrainHandling)
-                            .useConstraint(_useConstraints)
-                            .particleInertia(1.0)
-                            .build()));
-                    
+                            addExperiment(Experiment.builder()
+                                    .fitnessFunction(fitnessFunction)
+                                    .constraint(constrain)
+                                    .constraintHandlingMethod(constrainHandling)
+                                    .useConstraint(_useConstraints)
+                                    .particleInertia(1.0)
+                                    .build()));
+
                     // only run once if constraints are turned off
                     if (_useConstraints == false) {
                         break constraintLoop;
@@ -200,4 +203,86 @@ public final class ExperimentSetup {
         outputWriter.close();
     }
 
+    public static List<Setup> createSetups() {
+        int[] populations = new int[]{25, 50, 75};
+        List<Setup> setups = new ArrayList<>();
+
+        int counter = 0;
+        for (int population : populations) {
+            for (String fitnessFunction : ParamConfig.FITNESS_FUNCTIONS) {
+                setups.add(Setup.builder()
+                        .fitnessFunction(fitnessFunction)
+                        .populationSize(population)
+                        .useConstraint(false)
+                        .number(++counter)
+                        .build());
+                for (String constraintHandlingMethod : ParamConfig.CONSTRAINT_HANDLING_OPTIONS) {
+                    for (String constraint : ParamConfig.CONSTRAINTS) {
+                        setups.add(Setup.builder()
+                                .fitnessFunction(fitnessFunction)
+                                .populationSize(population)
+                                .useConstraint(true)
+                                .constraintHandlingMethod(constraintHandlingMethod)
+                                .constraint(constraint)
+                                .number(++counter)
+                                .build());
+                    }
+                }
+            }
+        }
+
+        System.out.printf("Created %d setups%n", setups.size());
+        return setups;
+    }
+
+    public static List<ExperimentDefinition> createExperiments() {
+        List<ExperimentDefinition> experiments = new ArrayList<>();
+
+        int[] particleSpeedLimits = new int[]{
+                1, 5, 10, 15, 20
+        };
+
+        double[] particleInertias = new double[]{
+                0.1, 0.25, 0.5, 0.75, 1.0
+        };
+
+        double[] personalConfidences = new double[]{
+                //                0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75
+                0.5, 1.0, 1.5
+        };
+
+        double[] swarmConfidences = new double[]{
+                //                0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75
+                0.5, 1.0, 1.5
+        };
+
+        double[] constraintRs = new double[]{
+                -0.25, -0.5, -0.75 // 0 = rejection, 1 = no constraint
+        };
+
+        int counter = 0;
+        for (int particleSpeedLimit : particleSpeedLimits) {
+            for (double particleInertia : particleInertias) {
+                for (double personalConfidence : personalConfidences) {
+                    for (double swarmConfidence : swarmConfidences) {
+                        for (double contraintR : constraintRs) {
+                            experiments.add(ExperimentDefinition.builder()
+                                    .particleSpeedLimit(particleSpeedLimit)
+                                    .particleInertia(particleInertia)
+                                    .personalConfidence(personalConfidence)
+                                    .swarmConfidence(swarmConfidence)
+                                    .constraintR(contraintR)
+                                    .number(++counter)
+                                    .build());
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.printf("Created %d experiments%n", experiments.size());
+
+
+        return experiments;
+    }
 }

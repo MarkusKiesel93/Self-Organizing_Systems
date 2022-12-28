@@ -56,7 +56,7 @@ public final class ExperimentSetup {
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
-                            .particleSpeedLimit(25)
+                            .particleSpeedLimit(20)
                             .build()));
             
                     // Hypothesis:
@@ -71,7 +71,7 @@ public final class ExperimentSetup {
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
                             .personalConfidence(0.1)
-                            .swarmConfidence(2.0)
+                            .swarmConfidence(1.0)
                             .build()));
             
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
@@ -81,7 +81,7 @@ public final class ExperimentSetup {
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
                             .personalConfidence(0.8)
-                            .swarmConfidence(1.3)
+                            .swarmConfidence(0.8)
                             .build()));
             
                     ParamConfig.FITNESS_FUNCTIONS.forEach(fitnessFunction ->
@@ -100,7 +100,7 @@ public final class ExperimentSetup {
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
-                            .personalConfidence(2.0)
+                            .personalConfidence(1.0)
                             .swarmConfidence(0.1)
                             .build()));
         
@@ -124,7 +124,7 @@ public final class ExperimentSetup {
                             .constraint(constrain)
                             .constraintHandlingMethod(constrainHandling)
                             .useConstraint(_useConstraints)
-                            .particleInertia(2.0)
+                            .particleInertia(1.0)
                             .build()));
                     
                     // only run once if constraints are turned off

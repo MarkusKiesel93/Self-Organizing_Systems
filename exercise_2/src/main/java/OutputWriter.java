@@ -22,7 +22,7 @@ public class OutputWriter {
 
     public void writeExperiment(Experiment experiment, int iteration) throws IOException {
         StringBuilder line = new StringBuilder();
-        Map<String, Object> experimentParameters = experiment.getParameters();
+        Map<String, Object> experimentParameters = experiment.getOutputParameters();
         line.append(experiment.getNumber());
         line.append(",");
         line.append(iteration);
@@ -35,7 +35,7 @@ public class OutputWriter {
         line.append(",");
         line.append(experiment.getOptimum());
         line.append(",");
-        line.append(experiment.getNumberOfIterations());
+        line.append(experiment.getNumberOfIterationsUntilFitness());
         line.append("\n");
         fileWriter.write(line.toString());
         fileWriter.flush();
@@ -48,7 +48,7 @@ public class OutputWriter {
             line.append(outputName);
             line.append(",");
         });
-        line.append("fitness,optimum,iterations_to_opt");
+        line.append("fitness,optimum,iterations_to_fitness");
         line.append("\n");
         fileWriter.write(line.toString());
         fileWriter.flush();

@@ -17,11 +17,11 @@ public final class ParamConfig {
     public static final String CONSTRAINT_10 = "Constraint 10";
 
     public static final int POPULATION_SIZE_MIN = 1;
-    public static final int POPULATION_SIZE_DEFAULT = 14;
+    public static final int POPULATION_SIZE_DEFAULT = 13;
     public static final int POPULATION_SIZE_MAX = 100;
 
     public static final int PARTICLE_SPEED_LIMIT_MIN = 1;
-    public static final int PARTICLE_SPEED_LIMIT_DEFAULT = 10;
+    public static final int PARTICLE_SPEED_LIMIT_DEFAULT = 13;
     public static final int PARTICLE_SPEED_LIMIT_MAX = 20;
 
     public static final double PARTICLE_INERTIA_MIN = 0.0;
@@ -33,11 +33,11 @@ public final class ParamConfig {
     public static final double PERSONAL_CONFIDENCE_MAX = 2.0;
 
     public static final double SWARM_CONFIDENCE_MIN = 0.0;
-    public static final double SWARM_CONFIDENCE_DEFAULT = 1.3;
+    public static final double SWARM_CONFIDENCE_DEFAULT = 1.6;
     public static final double SWARM_CONFIDENCE_MAX = 2.0;
 
     public static final double CONSTRAINT_R_MIN = -1.0;
-    public static final double CONSTRAINT_R_DEFAULT = -0.65;
+    public static final double CONSTRAINT_R_DEFAULT = -0.15;
     public static final double CONSTRAINT_R_MAX = 0.0;
 
     public static final List<String> FITNESS_FUNCTIONS = List.of(

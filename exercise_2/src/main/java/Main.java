@@ -1,9 +1,10 @@
 import org.nlogo.app.App;
+import org.nlogo.headless.HeadlessWorkspace;
+import org.nlogo.workspace.Controllable;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -13,6 +14,8 @@ import java.util.*;
 // Netlogo Controlling API: https://github.com/NetLogo/NetLogo/wiki/Controlling-API
 public class Main {
 
+    private static final boolean USE_HEADLESS = true;
+
     private static final int ITERATIONS_BY_EXPERIMENT = 10;
     private static final int ITERATIONS = 10;
     private static final int MAX_ITERATIONS_BY_RUN = 500;
@@ -21,11 +24,11 @@ public class Main {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    private static Controllable app;
+
     public static void main(String[] argv) {
-        // init NetLogo
-        App.main(argv);
         try {
-            loadNetLogoModel();
+            loadNetLogoModel(argv);
             runAllExperiments();
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,16 +36,31 @@ public class Main {
     }
 
     // load the Model from the MODEL_FILE_NAME value
-    private static void loadNetLogoModel() throws InvocationTargetException, InterruptedException {
+    private static void loadNetLogoModel(String[] argv) throws InvocationTargetException, InterruptedException {
         String modelFilePath = Paths.get(MODEL_FILE_NAME).toAbsolutePath().toString();
 
-        java.awt.EventQueue.invokeAndWait(() -> {
+        if (!USE_HEADLESS) {
+            App.main(argv);
+            java.awt.EventQueue.invokeAndWait(() -> {
+                try {
+                    App.app().open(modelFilePath, true);
+                    app = App.app();
+                } catch (java.io.IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } else {
+
+            final HeadlessWorkspace headlessWorkspace = HeadlessWorkspace.newInstance();
             try {
-                App.app().open(modelFilePath, true);
-            } catch (java.io.IOException ex) {
-                ex.printStackTrace();
+                headlessWorkspace.open(modelFilePath, true);
+                app = headlessWorkspace;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        });
+        }
+
+
     }
 
     // loop for all experiments
@@ -54,7 +72,6 @@ public class Main {
 
         final List<Setup> setups = ExperimentSetup.createSetups();
         final List<ExperimentDefinition> experiments = ExperimentSetup.createExperiments();
-        if (true) return;
 
         String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM_HH-mm-ss"));
         String outputFilePath = Paths.get(OUTPUT_FILE_NAME + dateTime + ".csv").toAbsolutePath().toString();
@@ -65,23 +82,23 @@ public class Main {
         for (int i = 1; i <= ITERATIONS; i++) {
             for (Setup setup : setups) {
                 if (setup.getFitnessFunction().equals(ParamConfig.FITNESS_FUNCTION_SCHWEFEL)) {
-                    App.app().command("resize-world -512 512 -512 512");
+                    app.command("resize-world -512 512 -512 512");
                 } else {
-                    App.app().command("resize-world -100 100 -100 100");
+                    app.command("resize-world -100 100 -100 100");
                 }
-                App.app().command(
+                app.command(
                         setCommand(ParamConfig.NETLOGO_MAPPING.get("fitnessFunction"), setup.getFitnessFunction()));
-                App.app().command(
+                app.command(
                         setCommand(ParamConfig.NETLOGO_MAPPING.get("useConstraint"), setup.getUseConstraint()));
                 if (setup.getUseConstraint()) {
-                    App.app().command(setCommand(ParamConfig.NETLOGO_MAPPING.get("constraintHandlingMethod"),
+                    app.command(setCommand(ParamConfig.NETLOGO_MAPPING.get("constraintHandlingMethod"),
                             setup.getConstraintHandlingMethod()));
-                    App.app().command(setCommand(ParamConfig.NETLOGO_MAPPING.get("constraint"), setup.getConstraint()));
-                    App.app().command(
+                    app.command(setCommand(ParamConfig.NETLOGO_MAPPING.get("constraint"), setup.getConstraint()));
+                    app.command(
                             setCommand(ParamConfig.NETLOGO_MAPPING.get("constraintR"), setup.getConstraintR()));
 
                 }
-                App.app().command(
+                app.command(
                         setCommand(ParamConfig.NETLOGO_MAPPING.get("populationSize"), setup.getPopulationSize()));
 
                 setup();
@@ -129,20 +146,20 @@ public class Main {
     }
 
     private static void setup() {
-        App.app().command("setup");
+        app.command("setup");
     }
 
     private static void run() {
-        App.app().command("repeat " + MAX_ITERATIONS_BY_RUN + " [ iterate ]");
+        app.command("repeat " + MAX_ITERATIONS_BY_RUN + " [ iterate ]");
     }
 
 
     // NetLogo extract variables of interest
     private static void report(Experiment experiment) {
-        experiment.setFitness((double) App.app().report("global-best-val"));
-        experiment.setOptimum((double) App.app().report("[val] of true-best-patch"));
-        experiment.setNumberOfIterations((int) (double) App.app().report("iterations"));
-        experiment.setNumberOfIterationsUntilFitness((int) (double) App.app().report("iterations-to-opt"));
+        experiment.setFitness((double) app.report("global-best-val"));
+        experiment.setOptimum((double) app.report("[val] of true-best-patch"));
+        experiment.setNumberOfIterations((int) (double) app.report("iterations"));
+        experiment.setNumberOfIterationsUntilFitness((int) (double) app.report("iterations-to-opt"));
         if (experiment.getFitness() == experiment.getOptimum()) {
             experiment.setOptimumReached(true);
         }
@@ -150,16 +167,16 @@ public class Main {
 
     // NetLogo repeat commands
     private static void repeat() {
-        App.app().command("clear-all");
-        App.app().command("import-world \"backup.txt\"");
-        App.app().command("update-highlight");
-        App.app().command("reset-ticks");
+        app.command("clear-all");
+        app.command("import-world \"backup.txt\"");
+        app.command("update-highlight");
+        app.command("reset-ticks");
     }
 
     // NetLogo set parameters of Experiment
     private static void setParams(Map<String, Object> params) {
         params.forEach((paramName, param) ->
-                App.app().command(setCommand(paramName, param)));
+                app.command(setCommand(paramName, param)));
     }
 
     // NetLogo set global variable command

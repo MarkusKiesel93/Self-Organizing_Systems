@@ -22,5 +22,4 @@ Implemetierung einer eigenen Penalty-Funktion für Constraint-handeling und verg
 
 # TODO:
 
-- maybe headless
 - show disadvantage of penalty method (optimum can be in restricted area)

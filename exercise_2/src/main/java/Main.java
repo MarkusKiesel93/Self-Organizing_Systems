@@ -65,7 +65,7 @@ public class Main {
     private static void runExperiment(Experiment experiment) {
         setParams(experiment.getParameters());
         setup();
-        run(experiment);
+        run();
         report(experiment);
         // todo: maybe use save command from NetLogo to store the experiment
     }
@@ -74,8 +74,12 @@ public class Main {
         App.app().command("setup");
     }
 
+    private static void run() {
+        App.app().command("repeat " + MAX_ITERATIONS_BY_RUN + " [ iterate ]");
+    }
+
     // NetLogo run command
-    private static void run(Experiment experiment) {
+    private static void runStepByStep(Experiment experiment) {
         final double optimum = (double) App.app().report("[val] of true-best-patch");
         double currentBestVal = -1;
         int iterationOfCurrentBestVal = -1;
@@ -93,7 +97,7 @@ public class Main {
             }
 
         }
-        experiment.setNumberOfIterationsUntilFitness(iterationOfCurrentBestVal);
+        experiment.setNumberOfIterations(iterationOfCurrentBestVal);
         if (experiment.isOptimumReached()) {
             System.out.printf("Optimum of '%f' was reached after %d iterations", currentBestVal, iterationOfCurrentBestVal);
 
@@ -106,8 +110,10 @@ public class Main {
     private static void report(Experiment experiment) {
         experiment.setFitness((double) App.app().report("global-best-val"));
         experiment.setOptimum((double) App.app().report("[val] of true-best-patch"));
-        // todo: extract numberOfIterations until optimum reached
-        experiment.setNumberOfIterations((int) (double) App.app().report("iterations"));
+        experiment.setNumberOfIterations((int) (double) App.app().report("iterations-to-opt"));
+        if (experiment.getFitness() == experiment.getOptimum()) {
+            experiment.setOptimumReached(true);
+        }
     }
 
     // NetLogo repeat commands

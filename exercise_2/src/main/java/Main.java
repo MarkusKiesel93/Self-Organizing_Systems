@@ -116,6 +116,7 @@ public class Main {
                             .particleInertia(experimentDefinition.getParticleInertia())
                             .personalConfidence(experimentDefinition.getPersonalConfidence())
                             .swarmConfidence(experimentDefinition.getSwarmConfidence())
+                            .particleSpeedLimit(experimentDefinition.getParticleSpeedLimit())
                             .number(experimentDefinition.getNumber() + (setup.getNumber() * 10000))
                             .build();
                     repeat();

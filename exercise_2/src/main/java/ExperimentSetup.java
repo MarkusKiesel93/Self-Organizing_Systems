@@ -156,8 +156,7 @@ public final class ExperimentSetup {
         // A too low coefficient can lead to the optimal value sitting inside the 
         // constrained region.
         // Hypothesis:
-        // The penalty method allows for the swarm to tunnel through forbidden areas 
-        // and therefore better find optima at the constrain boundaries
+
 
         /*
         ParamConfig.CONSTRAINTS.forEach(constrain ->
@@ -253,6 +252,42 @@ public final class ExperimentSetup {
 
         System.out.printf("Created %d setups%n", setups.size());
         return setups;
+    }
+
+    public static List<Setup> createSetups2() {
+        int[] populations = new int[]{5, 10, 35, 80};
+        List<Setup> setups = new ArrayList<>();
+        
+        int counter = 0;
+        for (int population : populations) {
+            for (String fitnessFunction : ParamConfig.FITNESS_FUNCTIONS) {
+                setups.add(Setup.builder()
+                        .fitnessFunction(fitnessFunction)
+                        .populationSize(population)
+                        .useConstraint(false)
+                        .number(++counter)
+                        .build());
+            }
+        }
+
+        System.out.printf("Created %d setups%n", setups.size());
+        return setups;
+    }
+    public static List<ExperimentDefinition> createExperiments2() {
+        List<ExperimentDefinition> experiments = new ArrayList<>();
+
+        int[] particleSpeedLimits = new int[]{
+                2, 10, 19
+        };
+        int counter = 0;
+        for (int particleSpeedLimit : particleSpeedLimits) {
+            experiments.add(ExperimentDefinition.builder()
+                    .particleSpeedLimit(particleSpeedLimit)
+                    .number(++counter)
+                    .build());
+        }
+
+        return experiments;
     }
 
     public static List<ExperimentDefinition> createExperiments() {

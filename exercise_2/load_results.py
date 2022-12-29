@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 
 RESULTS_PATH = Path(__file__).parent / 'results'
-MIN_ITERATIONS_BY_EXPERIMENT = 3  # todo: use 10
+MIN_ITERATIONS_BY_EXPERIMENT = 10
 PARAM_COLUMNS = ['fitness_function', 'use_constraint', 'constraint_handling_method', 'constraint',
                  'particle_speed_limit', 'population_size', 'personal_confidence', 'swarm_confidence',
                  'particle_inertia', 'constraint_r']

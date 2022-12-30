@@ -36,13 +36,19 @@ def load_setup_2(final_df_only=True):
         return df_full, df_params, df_results, df_to_eval
 
 
-def load_setup(folder):
+def load_setup_full(folder):
     df_full = pd.concat([pd.read_csv(file_path) for file_path in (RESULTS_PATH / folder).glob('*.csv')])
     df_full.constraint_r.replace(-0.15, '-', inplace=True)  # default was used when no constraint used -> change to NAN
     df_full[PARAM_COLUMNS] = df_full[PARAM_COLUMNS].fillna('-')  # pevent ignoring nan values in params on groupby
-    # normalize fitness and optiomum always 1.0
-    df_full.optimum = df_full.optimum / df_full.optimum
+    return df_full
+
+
+def load_setup(folder):
+    df_full = load_setup_full(folder)
+    # normalize fitness
     df_full.fitness = df_full.fitness / df_full.optimum
+    # optimum always one
+    df_full.optimum = df_full.optimum / df_full.optimum
     df_params = df_full[PARAM_COLUMNS].drop_duplicates()
     df_results = df_full.groupby(PARAM_COLUMNS)[RESULT_COLUMNS_ALL].mean()
     df_to_eval = df_full.groupby(PARAM_COLUMNS)[RESULT_COLUMNS_ALL].mean().reset_index()

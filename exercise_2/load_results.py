@@ -10,7 +10,7 @@ PARAM_COLUMNS = ['fitness_function', 'use_constraint', 'constraint_handling_meth
 RESULT_COLUMNS_ALL = ['fitness', 'optimum', 'iterations', 'optimum_reached', 'iterations_to_opt']
 RESULT_COLUMNS = ['fitness', 'optimum_reached', 'iterations_to_opt']
 FITNESS_FUNCTIONS = ['Shubert function', "Booth's function", 'Schwefel function']
-
+CONSTRAINTS = ['Constraint 3', 'Constraint 5', 'Constraint 10']
 
 def load_setup_1(final_df_only=True):
     NUMBER_OF_EXPERIMENTS = 27 * 228 / 3
